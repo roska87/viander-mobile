@@ -83,7 +83,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -93,11 +93,13 @@
         android:id="@+id/imageButton4"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/icon_rounded"
         android:contentDescription="@string/icon_google"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/google"
-        tools:layout_editor_absoluteX="166dp"
-        tools:layout_editor_absoluteY="499dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idBtnLogin"
+        app:srcCompat="@drawable/google" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
