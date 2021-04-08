@@ -16,10 +16,12 @@ import com.bit.viandermobile.rest.RestApiClient;
 import com.bit.viandermobile.rest.RestApiInterface;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,9 +29,9 @@ import retrofit2.Response;
 public class VianderRepository {
 
     private RestApiInterface apiService = RestApiClient.getClient().create(RestApiInterface.class);
-    private String token = null;
     private MutableLiveData<String> username = new MutableLiveData<>();
     private MutableLiveData<UserDto> loggedUser = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
     private MutableLiveData<List<PostDto>> viandsMenu = new MutableLiveData<>();
     private Application application;
 
@@ -45,42 +47,34 @@ public class VianderRepository {
         return loggedUser;
     }
 
+    public MutableLiveData<String> getToken(){
+        return token;
+    }
+
     public MutableLiveData<List<PostDto>> getViands(){
         return viandsMenu;
     }
 
-    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
-
-    /*
-    public boolean login(String username2, String password){
-        LoginRequestDto loginRequestDto = new LoginRequestDto(username2, password);
-        try {
-            Response<LoginDto> loginDto = apiService.login(loginRequestDto).execute();
-            token = this.formatLoginKey(loginDto.body().getKey());
-            if(token != null){
-                username.setValue(username2);
-                getUser();
-                return true;
-            }
-        } catch (IOException e) {
-            Toast.makeText(application.getApplicationContext(), "Error en login: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
-     */
-
-
     public void login(String username2, String password){
+        Log.i("username", username2);
+        Log.i("password", password);
         LoginRequestDto login = new LoginRequestDto(username2, password);
         apiService.login(login).enqueue(new Callback<LoginDto>() {
             @Override
             public void onResponse(Call<LoginDto> call, Response<LoginDto> response) {
-                token = formatLoginKey(response.body().getKey());
-                Log.i("login", token);
-                if(token != null){
-                    username.setValue(username2);
-                    getUser();
+                if(response.body() != null && response.body().getKey() != null){
+                    token.setValue(formatLoginKey(response.body().getKey()));
+                    Log.i("login", token.getValue());
+                    if(token != null){
+                        username.setValue(username2);
+                        getUser();
+                    }
+                }
+                if(response.body() == null){
+                    Toast.makeText(application.getApplicationContext(), "body is null", Toast.LENGTH_LONG).show();
+                }
+                if(response.body().getKey() == null){ //TODO chequear response.body() == null
+                    Toast.makeText(application.getApplicationContext(), "key is null", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -92,8 +86,26 @@ public class VianderRepository {
         });
     }
 
+    public void logout(){
+        apiService.logout(token.getValue()).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                loggedUser = new MutableLiveData<>();
+                username = new MutableLiveData<>();
+                viandsMenu = new MutableLiveData<>();
+                token = new MutableLiveData<>();
+                Log.i("logout", response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), "Error en logout: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void getUser(){
-        apiService.getUserByUsername(token, username.getValue()).enqueue(new Callback<List<UserDto>>() {
+        apiService.getUserByUsername(token.getValue(), username.getValue()).enqueue(new Callback<List<UserDto>>() {
             @Override
             public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
                 loggedUser.setValue(response.body().get(0));
@@ -107,7 +119,7 @@ public class VianderRepository {
     }
 
     public void updateProfile(ProfileDto profileDto){
-        apiService.updateProfile(token, profileDto.getId(), profileDto).enqueue(new Callback<ProfileDto>() {
+        apiService.updateProfile(token.getValue(), profileDto.getId(), profileDto).enqueue(new Callback<ProfileDto>() {
             @Override
             public void onResponse(Call<ProfileDto> call, Response<ProfileDto> response) {
                 getUser();
@@ -116,6 +128,23 @@ public class VianderRepository {
             @Override
             public void onFailure(Call<ProfileDto> call, Throwable t) {
                 Toast.makeText(application.getApplicationContext(), "Error al actualizar perfil: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void getPost(String token, int id){
+        apiService.getPosts(token, id).enqueue(new Callback<PostDto>() {
+            @Override
+            public void onResponse(Call<PostDto> call, Response<PostDto> response) {
+                Log.i("GET POST", response.body().toString());
+                List<PostDto> postLst = new ArrayList<>();
+                postLst.add(response.body());
+                viandsMenu.setValue(postLst);
+            }
+
+            @Override
+            public void onFailure(Call<PostDto> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), "Error al obtener post: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

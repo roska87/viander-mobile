@@ -23,6 +23,9 @@ public interface RestApiInterface {
     @POST("/auth/login/")
     Call<LoginDto> login(@Body LoginRequestDto loginRequestDto);
 
+    @POST("/auth/logout/")
+    Call<ResponseBody> logout(@Header("Authorization") String token);
+
     @GET("/api/posts/{id}")
     Call<PostDto> getPosts(@Header("Authorization") String token,
                            @Path("id") int id);

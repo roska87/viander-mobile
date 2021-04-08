@@ -23,17 +23,23 @@ public class VianderViewModel extends AndroidViewModel {
 
     private VianderRepository vianderRepository;
     private MutableLiveData<UserDto> loggedUser;
+    private MutableLiveData<String> token;
     private MutableLiveData<List<PostDto>> viandsMenu;
 
     public VianderViewModel(@NonNull Application application){
         super(application);
         vianderRepository = new VianderRepository(application);
         loggedUser = vianderRepository.getLoggedUser();
+        token = vianderRepository.getToken();
         viandsMenu = vianderRepository.getViands();
     }
 
     public LiveData<UserDto> getLoggedUser(){
         return loggedUser;
+    }
+
+    public LiveData<String> getToken(){
+        return token;
     }
 
     public LiveData<List<PostDto>> getViandsMenu(){
@@ -42,6 +48,10 @@ public class VianderViewModel extends AndroidViewModel {
 
     public void login(String username, String password){
         vianderRepository.login(username, password);
+    }
+
+    public void logout(){
+        vianderRepository.logout();
     }
 
     public void updateProfile(List<Pair<Boolean, String>> filterList){
@@ -56,6 +66,10 @@ public class VianderViewModel extends AndroidViewModel {
 
     public void changeViand(int viandId){
         //TODO
+    }
+
+    public void getPost(String token, int id){
+        vianderRepository.getPost(token, id);
     }
 
     private String formatFilters(List<Pair<Boolean, String>> filterList){
