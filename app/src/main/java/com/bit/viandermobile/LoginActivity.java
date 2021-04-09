@@ -22,6 +22,9 @@ import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 
 import static  com.bit.viandermobile.constants.Constants.*;
@@ -33,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private VianderViewModel vianderViewModel;
     private SessionViewModel sessionViewModel;
+    private CallbackManager callbackManager;
 
     SharedPreferences sharedpreferences;
     String email, password, token;
@@ -40,6 +44,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FacebookSdk.setApplicationId("vianderApp");
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_login);
 
         // Set the dimensions of the sign-in button.
