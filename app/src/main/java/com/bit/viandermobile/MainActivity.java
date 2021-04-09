@@ -57,28 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }, SPLASH_TIME_OUT);
-
-        /*
-        sessionViewModel.getSession().observe(this, new Observer<Session>() {
-            @Override
-            public void onChanged(Session session) {
-                Intent intent = null;
-                if(session == null){
-                    Log.i("Launch", "Login");
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                }else{
-                    Log.i("Launch", "Home");
-                    intent = new Intent(MainActivity.this, HomeActivity.class);
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString(USERNAME_KEY, session.getUsername());
-                    editor.putString(TOKEN_KEY, session.getToken());
-                    editor.apply();
-                }
-                startActivity(intent);
-                finish();
-            }
-        });
-         */
+        
     }
 
 }
