@@ -1,25 +1,25 @@
-package com.bit.viandermobile;
+package com.bit.viandermobile.factories;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import com.bit.viandermobile.models.VianderViewModel;
+import com.bit.viandermobile.models.SessionViewModel;
 
-public class VianderFactory extends ViewModelProvider.NewInstanceFactory {
+public class SessionFactory extends ViewModelProvider.NewInstanceFactory {
 
     @NonNull
     private final Application application;
 
-    public VianderFactory(@NonNull Application application){
+    public SessionFactory(@NonNull Application application){
         this.application = application;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if(modelClass == VianderViewModel.class){
-            return (T) new VianderViewModel(application);
+        if(modelClass == SessionViewModel.class){
+            return (T) new SessionViewModel(application);
         }
         return null;
     }
