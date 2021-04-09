@@ -13,28 +13,23 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bit.viandermobile.domain.PostDto;
+import com.bit.viandermobile.factories.SessionFactory;
+import com.bit.viandermobile.factories.VianderFactory;
+import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+
+import static  com.bit.viandermobile.constants.Constants.*;
 
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    // creating constant keys for shared preferences.
-    public static final String SHARED_PREFS = "shared_prefs";
-
-    // key for storing email.
-    public static final String EMAIL_KEY = "email_key";
-
-    // key for storing password.
-    public static final String PASSWORD_KEY = "password_key";
-
-    public static final String TOKEN_KEY = "token_key";
-
     private VianderViewModel vianderViewModel;
+    private SessionViewModel sessionViewModel;
 
     // variable for shared preferences.
     SharedPreferences sharedpreferences;
-    String email, token;
+    String email, username, token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         vianderViewModel = new ViewModelProvider(this, new VianderFactory(getApplication())).get(VianderViewModel.class);
+        sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
 
         // initializing our shared preferences.
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
@@ -49,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         // getting data from shared prefs and
         // storing it in our string variable.
         email = sharedpreferences.getString(EMAIL_KEY, null);
-
+        username = sharedpreferences.getString(USERNAME_KEY, null);
         token = sharedpreferences.getString(TOKEN_KEY, null);
         if(token != null){
             Log.i("Token -> ", token);
@@ -75,6 +71,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                sessionViewModel.delete();
+
                 // calling method to edit values in shared prefs.
                 SharedPreferences.Editor editor = sharedpreferences.edit();
 
@@ -94,7 +92,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 // starting mainactivity after
                 // clearing values in shared preferences.
-                Intent i = new Intent(HomeActivity.this, MainActivity.class);
+                Intent i = new Intent(HomeActivity.this, LoginActivity.class);
                 startActivity(i);
                 finish();
             }

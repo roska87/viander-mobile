@@ -1,99 +1,62 @@
 package com.bit.viandermobile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.bit.viandermobile.domain.UserDto;
-import com.bit.viandermobile.models.VianderViewModel;
+import com.bit.viandermobile.entities.Session;
+import com.bit.viandermobile.factories.SessionFactory;
+import com.bit.viandermobile.models.SessionViewModel;
+
+import static  com.bit.viandermobile.constants.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String SHARED_PREFS = "shared_prefs";
-    public static final String EMAIL_KEY = "email_key";
-    public static final String PASSWORD_KEY = "password_key";
-    public static final String TOKEN_KEY = "token_key";
+    private static final int SPLASH_TIME_OUT = 1000;
 
-    public static final int LOGIN_REQUEST_CODE = 1;
-    public static final String MSG_TOKEN = "com.bit.vianderapp.MSG_TOKEN";
-
-    private VianderViewModel vianderViewModel;
-
-    SharedPreferences sharedpreferences;
-    String email, password, token;
+    private SessionViewModel sessionViewModel;
+    private SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initializing EditTexts and our Button
-        EditText emailEdt = findViewById(R.id.idEdtEmail);
-        EditText passwordEdt = findViewById(R.id.idEdtPassword);
-        Button loginBtn = findViewById(R.id.idBtnLogin);
-
-        // getting the data which is stored in shared preferences.
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        //email = sharedpreferences.getString(EMAIL_KEY, null);
-        //password = sharedpreferences.getString(PASSWORD_KEY, null);
+        sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
 
-        vianderViewModel = new ViewModelProvider(this, new VianderFactory(getApplication())).get(VianderViewModel.class);
-
-        // calling on click listener for login button.
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                // to check if the user fields are empty or not.
-                if (TextUtils.isEmpty(emailEdt.getText().toString()) && TextUtils.isEmpty(passwordEdt.getText().toString())) {
-                    // this method will call when email and password fields are empty.
-                    Toast.makeText(MainActivity.this, "Please Enter Email and Password", Toast.LENGTH_SHORT).show();
-                } else {
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-
-                    String email = emailEdt.getText().toString();
-                    String password = passwordEdt.getText().toString();
-
-                    // below two lines will put values for
-                    // email and password in shared preferences.
-                    editor.putString(EMAIL_KEY, emailEdt.getText().toString());
-                    editor.putString(PASSWORD_KEY, passwordEdt.getText().toString());
-
-                    // to save our data with key and value.
-                    editor.apply();
-
-                    vianderViewModel.login(email, password);
-                    vianderViewModel.getLoggedUser().observeForever(userDto -> {
-                        editor.putString(TOKEN_KEY, vianderViewModel.getToken().getValue());
-                        editor.apply();
-                        Log.i("LoggedUser", userDto.getUsername());
-                        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-                        startActivity(i);
+            public void run() {
+                sessionViewModel.getSession().observe(MainActivity.this, new Observer<Session>() {
+                    @Override
+                    public void onChanged(Session session) {
+                        Intent intent = null;
+                        if(session == null){
+                            Log.i("Launch", "Login");
+                            intent = new Intent(MainActivity.this, LoginActivity.class);
+                        }else{
+                            Log.i("Launch", "Home");
+                            intent = new Intent(MainActivity.this, HomeActivity.class);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString(USERNAME_KEY, session.getUsername());
+                            editor.putString(TOKEN_KEY, session.getToken());
+                            editor.apply();
+                        }
+                        startActivity(intent);
                         finish();
-                    });
-
-                }
+                    }
+                });
             }
-        });
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (token != null) {
-            Intent i = new Intent(MainActivity.this, HomeActivity.class);
-            startActivity(i);
-        }
+        }, SPLASH_TIME_OUT);
 
     }
 

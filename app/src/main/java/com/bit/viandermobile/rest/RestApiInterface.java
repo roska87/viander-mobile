@@ -3,6 +3,8 @@ package com.bit.viandermobile.rest;
 import com.bit.viandermobile.domain.LoginDto;
 import com.bit.viandermobile.domain.LoginRequestDto;
 import com.bit.viandermobile.domain.PostDto;
+import com.bit.viandermobile.domain.PostRandomDto;
+import com.bit.viandermobile.domain.PostRandomRequestDto;
 import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
 
@@ -26,20 +28,24 @@ public interface RestApiInterface {
     @POST("/auth/logout/")
     Call<ResponseBody> logout(@Header("Authorization") String token);
 
-    @GET("/api/posts/{id}")
+    @GET("/api/posts/{id}/")
     Call<PostDto> getPosts(@Header("Authorization") String token,
                            @Path("id") int id);
 
-    @GET("/api/profiles/{id}")
+    @POST("/api/random/")
+    Call<PostRandomDto> getPostRandom(@Header("Authorization") String token,
+                                      @Query("limit") int limit,
+                                      @Body PostRandomRequestDto postRandomRequestDto);
+
+    @GET("/api/profiles/{id}/")
     Call<ProfileDto> getProfiles(@Header("Authorization") String token,
                                  @Path("id") int id);
 
-    @PUT("/api/profiles/{id}")
+    @PUT("/api/profiles/")
     Call<ProfileDto> updateProfile(@Header("Authorization") String token,
-                                   @Path("id") int id,
                                    @Body ProfileDto profileDto);
 
-    @GET("/api/users/{id}")
+    @GET("/api/users/{id}/")
     Call<UserDto> getUser(@Header("Authorization") String token,
                           @Path("id") int id);
 
