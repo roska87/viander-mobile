@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bit.viandermobile.entities.Session;
@@ -21,6 +22,7 @@ import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.google.android.gms.common.SignInButton;
 
 import static  com.bit.viandermobile.constants.Constants.*;
 
@@ -40,6 +42,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Set the dimensions of the sign-in button.
+        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        setGooglePlusButtonText(signInButton, getString(R.string.google_login));
+
         // Initializing EditTexts and our Button
         EditText emailEdt = findViewById(R.id.idEdtEmail);
         EditText passwordEdt = findViewById(R.id.idEdtPassword);
@@ -58,9 +65,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // to check if the user fields are empty or not.
-                if (TextUtils.isEmpty(emailEdt.getText().toString()) && TextUtils.isEmpty(passwordEdt.getText().toString())) {
+                if (TextUtils.isEmpty(emailEdt.getText().toString()) || TextUtils.isEmpty(passwordEdt.getText().toString())) {
                     // this method will call when email and password fields are empty.
-                    Toast.makeText(LoginActivity.this, "Please Enter Email and Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.enter_fields_login, Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences.Editor editor = sharedpreferences.edit();
 
@@ -112,6 +119,19 @@ public class LoginActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        // Find the TextView that is inside of the SignInButton and set its text
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(buttonText);
+                return;
+            }
+        }
     }
 
 }

@@ -1,10 +1,12 @@
 <resources>
-    <string name="app_name">VianderMobile</string>
+    <string name="app_name">Viander</string>
     <string name="login">Ingresar</string>
     <string name="enter_password">Contraseña</string>
     <string name="enter_your_username">Usuario</string>
     <string name="logout">Salir</string>
 
     <string name="logo">Logo Viander</string>
-    <string name="google_login">Login Google</string>
+    <string name="google_login">INGRESAR CON GOOGLE</string>
+
+    <string name="enter_fields_login">Debe ingresar usuario y contraseña</string>
 </resources>
