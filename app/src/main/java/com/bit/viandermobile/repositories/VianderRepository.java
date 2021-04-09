@@ -5,19 +5,27 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.util.Pair;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.bit.viandermobile.domain.LoginDto;
 import com.bit.viandermobile.domain.LoginRequestDto;
 import com.bit.viandermobile.domain.PostDto;
+import com.bit.viandermobile.domain.PostRandomDto;
+import com.bit.viandermobile.domain.PostRandomRequestDto;
 import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.rest.RestApiClient;
 import com.bit.viandermobile.rest.RestApiInterface;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,14 +41,11 @@ public class VianderRepository {
     private MutableLiveData<UserDto> loggedUser = new MutableLiveData<>();
     private MutableLiveData<String> token = new MutableLiveData<>();
     private MutableLiveData<List<PostDto>> viandsMenu = new MutableLiveData<>();
+    private MutableLiveData<Map<Integer, PostDto>> randomPosts = new MutableLiveData<>();
     private Application application;
 
     public VianderRepository(Application application){
         this.application = application;
-    }
-
-    public boolean isLogged(){
-        return username.getValue() != null;
     }
 
     public MutableLiveData<UserDto> getLoggedUser(){
@@ -53,6 +58,10 @@ public class VianderRepository {
 
     public MutableLiveData<List<PostDto>> getViands(){
         return viandsMenu;
+    }
+
+    public MutableLiveData<Map<Integer, PostDto>> getRandomPosts() {
+        return randomPosts;
     }
 
     public void login(String username2, String password){
@@ -149,6 +158,48 @@ public class VianderRepository {
         });
     }
 
+    public void getRandomPosts(String token, int limit){
+        PostRandomRequestDto postRandomRequestDto = getFilters();
+        apiService.getPostRandom(token, limit, postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
+            @Override
+            public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
+                PostRandomDto randomDto = response.body();
+                Map<Integer, PostDto> map = new HashMap<>();
+                if(randomDto.getResults() != null && randomDto.getResults().size() > 0){
+                    for(int i = 0; i < randomDto.getResults().size(); i++){
+                        map.put(i+1, randomDto.getResults().get(i));
+                    }
+                }
+                randomPosts.setValue(map);
+            }
+
+            @Override
+            public void onFailure(Call<PostRandomDto> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), "Error al obtener random posts: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void changePost(String token, List<Integer> positions){
+        PostRandomRequestDto postRandomRequestDto = getFilters();
+        apiService.getPostRandom(token, positions.size(), postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
+            @Override
+            public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
+                PostRandomDto randomDto = response.body();
+                Map<Integer, PostDto> map = randomPosts.getValue();
+                for(int i = 0; i < positions.size(); i++){
+                    map.put(positions.get(i), randomDto.getResults().get(i));
+                }
+                randomPosts.setValue(map);
+            }
+
+            @Override
+            public void onFailure(Call<PostRandomDto> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), "Error al cambiar random posts: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private String formatLoginKey(String loginKey){
         if(TextUtils.isEmpty(loginKey)){
             return null;
@@ -156,6 +207,21 @@ public class VianderRepository {
         return "Token " + loginKey;
     }
 
-
+    private PostRandomRequestDto getFilters(){
+        List<String> contains = new ArrayList<>();
+        List<String> notContains = new ArrayList<>();
+        String filters = loggedUser.getValue().getProfile().getFilters();
+        String[] filtersArray = filters.split(",");
+        for(String filter : filtersArray){
+            if(filter.startsWith("!")){
+                notContains.add(filter.replace("!", ""));
+            }else{
+                contains.add(filter);
+            }
+        }
+        String containsStr = StringUtils.join(contains, ",");
+        String notContainsStr = StringUtils.join(notContains, ",");
+        return new PostRandomRequestDto(containsStr, notContainsStr);
+    }
 
 }

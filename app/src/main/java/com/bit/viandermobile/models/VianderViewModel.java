@@ -17,6 +17,7 @@ import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.repositories.VianderRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VianderViewModel extends AndroidViewModel {
@@ -25,6 +26,7 @@ public class VianderViewModel extends AndroidViewModel {
     private MutableLiveData<UserDto> loggedUser;
     private MutableLiveData<String> token;
     private MutableLiveData<List<PostDto>> viandsMenu;
+    private MutableLiveData<Map<Integer, PostDto>> menu;
 
     public VianderViewModel(@NonNull Application application){
         super(application);
@@ -32,6 +34,7 @@ public class VianderViewModel extends AndroidViewModel {
         loggedUser = vianderRepository.getLoggedUser();
         token = vianderRepository.getToken();
         viandsMenu = vianderRepository.getViands();
+        menu = vianderRepository.getRandomPosts();
     }
 
     public LiveData<UserDto> getLoggedUser(){
@@ -44,6 +47,14 @@ public class VianderViewModel extends AndroidViewModel {
 
     public LiveData<List<PostDto>> getViandsMenu(){
         return viandsMenu;
+    }
+
+    public LiveData<Map<Integer, PostDto>> getMenu(){
+        return menu;
+    }
+
+    public void changeViand(String token, List<Integer> viandPositions){
+        vianderRepository.changePost(token, viandPositions);
     }
 
     public void login(String username, String password){
@@ -62,10 +73,6 @@ public class VianderViewModel extends AndroidViewModel {
         ProfileDto profileDto = loggedUser.getValue().getProfile();
         profileDto.setFilters(filters);
         vianderRepository.updateProfile(profileDto);
-    }
-
-    public void changeViand(int viandId){
-        //TODO
     }
 
     public void getPost(String token, int id){
