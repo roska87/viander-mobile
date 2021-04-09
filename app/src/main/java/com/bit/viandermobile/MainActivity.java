@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
 
+        startHeavyProcessing();
+
+        /*
         sessionViewModel.getSession().observe(this, new Observer<Session>() {
             @Override
             public void onChanged(Session session) {
@@ -45,8 +49,11 @@ public class MainActivity extends AppCompatActivity {
                     editor.apply();
                 }
                 startActivity(intent);
+                finish();
             }
         });
+
+         */
 
         /*
         Intent intent = null;
@@ -78,6 +85,53 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
 
          */
+    }
+
+    private void startHeavyProcessing(){
+        new LongOperation().execute("");
+    }
+
+    private class LongOperation extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            //some heavy processing resulting in a Data String
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.interrupted();
+            }
+            return "Login!";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            sessionViewModel.getSession().observe(MainActivity.this, new Observer<Session>() {
+                @Override
+                public void onChanged(Session session) {
+                    Intent intent = null;
+                    if(session == null){
+                        Log.i("Launch", "Login");
+                        intent = new Intent(MainActivity.this, LoginActivity.class);
+                    }else{
+                        Log.i("Launch", "Home");
+                        intent = new Intent(MainActivity.this, HomeActivity.class);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(USERNAME_KEY, session.getUsername());
+                        editor.putString(TOKEN_KEY, session.getToken());
+                        editor.apply();
+                    }
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
     }
 
 
