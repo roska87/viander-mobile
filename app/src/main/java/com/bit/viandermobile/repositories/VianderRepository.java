@@ -128,7 +128,8 @@ public class VianderRepository {
     }
 
     public void updateProfile(ProfileDto profileDto){
-        apiService.updateProfile(token.getValue(), profileDto.getId(), profileDto).enqueue(new Callback<ProfileDto>() {
+        profileDto.setImage(null);
+        apiService.updateProfile(token.getValue(), profileDto).enqueue(new Callback<ProfileDto>() {
             @Override
             public void onResponse(Call<ProfileDto> call, Response<ProfileDto> response) {
                 getUser();
