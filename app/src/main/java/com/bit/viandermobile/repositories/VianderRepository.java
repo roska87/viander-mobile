@@ -9,6 +9,7 @@ import androidx.core.util.Pair;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.bit.viandermobile.R;
 import com.bit.viandermobile.domain.LoginDto;
 import com.bit.viandermobile.domain.LoginRequestDto;
 import com.bit.viandermobile.domain.PostDto;
@@ -79,11 +80,8 @@ public class VianderRepository {
                         getUser();
                     }
                 }
-                if(response.body() == null){
-                    Toast.makeText(application.getApplicationContext(), "body is null", Toast.LENGTH_LONG).show();
-                }
-                if(response.body().getKey() == null){ //TODO chequear response.body() == null
-                    Toast.makeText(application.getApplicationContext(), "key is null", Toast.LENGTH_LONG).show();
+                if(response.code() == 400){
+                    Toast.makeText(application.getApplicationContext(), R.string.invalid_credentials, Toast.LENGTH_LONG).show();
                 }
             }
 
