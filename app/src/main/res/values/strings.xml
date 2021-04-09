@@ -9,4 +9,5 @@
     <string name="google_login">INGRESAR CON GOOGLE</string>
 
     <string name="enter_fields_login">Debe ingresar usuario y contraseña</string>
+    <string name="coming_soon">Próximamente!</string>
 </resources>

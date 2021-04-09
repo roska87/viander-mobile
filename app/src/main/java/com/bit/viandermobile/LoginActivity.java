@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private SessionViewModel sessionViewModel;
 
     SharedPreferences sharedpreferences;
-    String email, password, token;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +54,15 @@ public class LoginActivity extends AppCompatActivity {
 
         // getting the data which is stored in shared preferences.
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        //email = sharedpreferences.getString(EMAIL_KEY, null);
-        //password = sharedpreferences.getString(PASSWORD_KEY, null);
-
         vianderViewModel = new ViewModelProvider(this, new VianderFactory(getApplication())).get(VianderViewModel.class);
         sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(LoginActivity.this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // calling on click listener for login button.
         loginBtn.setOnClickListener(new View.OnClickListener() {
