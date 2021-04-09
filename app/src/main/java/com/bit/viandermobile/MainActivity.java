@@ -52,38 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-         */
-
-        /*
-        Intent intent = null;
-        Session session = sessionViewModel.getSession().getValue();
-        Log.i("MAIN SESSION", String.valueOf(session));
-        if(session == null){
-            Log.i("Launch", "Login");
-            intent = new Intent(this, LoginActivity.class);
-        }else{
-            Log.i("Launch", "Home");
-            intent = new Intent(this, HomeActivity.class);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(USERNAME_KEY, session.getUsername());
-            editor.putString(TOKEN_KEY, session.getToken());
-            editor.apply();
-        }
-        startActivity(intent);
-
-         */
-
-        /*
-        Intent i = new Intent(this, LoginActivity.class);
-        Log.i("Launch", "launch");
-        try {
-            Thread.sleep(2000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        startActivity(i);
-
          */
     }
 
