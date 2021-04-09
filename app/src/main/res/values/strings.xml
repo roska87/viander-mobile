@@ -6,7 +6,7 @@
     <string name="logout">Salir</string>
 
     <string name="logo">Logo Viander</string>
-    <string name="google_login">INGRESAR CON GOOGLE</string>
+    <string name="google_login">Ingresar con Google</string>
 
     <string name="enter_fields_login">Debe ingresar usuario y contraseña</string>
 </resources>
