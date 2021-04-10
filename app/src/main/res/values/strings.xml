@@ -3,12 +3,23 @@
     <string name="login">Ingresar</string>
     <string name="enter_password">Contraseña</string>
     <string name="enter_your_username">Usuario</string>
+    <string name="confirmation">Confirmación</string>
     <string name="logout">Salir</string>
 
     <string name="logo">Logo Viander</string>
     <string name="google_login">INGRESAR CON GOOGLE</string>
 
+    <string name="welcome">Bienvenid@</string>
+
     <string name="enter_fields_login">Debe ingresar usuario y contraseña</string>
     <string name="coming_soon">Próximamente!</string>
     <string name="invalid_credentials">Credenciales inválidas</string>
+
+    <string name="confirmation_image">Pedido confirmado</string>
+    <string name="confirmation_title">Su compra fue realizada con éxito!</string>
+    <string name="confirmation_mail_message">Se le enviará un correo electrónico con la confirmación.</string>
+    <string name="confirmation_total_amount_message">El total a abonar es $</string>
+    <string name="confirmation_thanks_message">Gracias por preferirnos!</string>
+
+    <string name="back_to_home">Volver al inicio</string>
 </resources>

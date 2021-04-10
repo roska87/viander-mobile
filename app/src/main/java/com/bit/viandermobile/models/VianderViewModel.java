@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 public class VianderViewModel extends AndroidViewModel {
 
     private VianderRepository vianderRepository;
-    private MutableLiveData<UserDto> loggedUser;
-    private MutableLiveData<String> token;
-    private MutableLiveData<List<PostDto>> viandsMenu;
-    private MutableLiveData<Map<Integer, PostDto>> menu;
+    private LiveData<UserDto> loggedUser;
+    private LiveData<String> token;
+    private LiveData<List<PostDto>> viandsMenu;
+    private LiveData<Map<Integer, PostDto>> menu;
 
     public VianderViewModel(@NonNull Application application){
         super(application);

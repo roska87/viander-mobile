@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.util.Pair;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
@@ -49,19 +50,19 @@ public class VianderRepository {
         this.application = application;
     }
 
-    public MutableLiveData<UserDto> getLoggedUser(){
+    public LiveData<UserDto> getLoggedUser(){
         return loggedUser;
     }
 
-    public MutableLiveData<String> getToken(){
+    public LiveData<String> getToken(){
         return token;
     }
 
-    public MutableLiveData<List<PostDto>> getViands(){
+    public LiveData<List<PostDto>> getViands(){
         return viandsMenu;
     }
 
-    public MutableLiveData<Map<Integer, PostDto>> getRandomPosts() {
+    public LiveData<Map<Integer, PostDto>> getRandomPosts() {
         return randomPosts;
     }
 

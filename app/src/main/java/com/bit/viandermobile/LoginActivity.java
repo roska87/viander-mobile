@@ -23,6 +23,7 @@ import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import static  com.bit.viandermobile.constants.Constants.*;
 
@@ -48,8 +49,8 @@ public class LoginActivity extends AppCompatActivity {
         setGooglePlusButtonText(signInButton, getString(R.string.google_login));
 
         // Initializing EditTexts and our Button
-        EditText emailEdt = findViewById(R.id.idEdtEmail);
-        EditText passwordEdt = findViewById(R.id.idEdtPassword);
+        EditText emailEdt = ((TextInputLayout) findViewById(R.id.idEdtEmail)).getEditText();
+        EditText passwordEdt = ((TextInputLayout) findViewById(R.id.idEdtPassword)).getEditText();
         Button loginBtn = findViewById(R.id.idBtnLogin);
 
         // getting the data which is stored in shared preferences.

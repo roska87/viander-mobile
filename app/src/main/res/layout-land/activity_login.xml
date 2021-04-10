@@ -10,64 +10,6 @@
     <!--EditText for getting user email address-->
     <!--input type is set to email-->
 
-    <EditText
-        android:id="@+id/idEdtEmail"
-        android:layout_width="522dp"
-        android:layout_height="55dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:hint="@string/enter_your_username"
-        android:importantForAutofill="no"
-        android:inputType="textEmailAddress"
-        android:textColorHint="#ffffff"
-        android:textColorLink="#ffffff" />
-
-    <EditText
-        android:id="@+id/idEdtPassword"
-        android:layout_width="522dp"
-        android:layout_height="55dp"
-        android:layout_below="@+id/idEdtEmail"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:hint="@string/enter_password"
-        android:importantForAutofill="no"
-        android:inputType="textPassword"
-        android:textColorHint="#ffffff"
-        android:textColorLink="#000000" />
-
-    <Button
-        android:id="@+id/idBtnLogin"
-        android:layout_width="522dp"
-        android:layout_height="55dp"
-        android:layout_below="@id/idEdtPassword"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="193dp"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:text="@string/login"
-        android:textColor="#ffffff"
-        app:backgroundTint="#2547A6" />
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="149dp"
@@ -82,21 +24,95 @@
         android:layout_centerVertical="true"
         app:srcCompat="@drawable/logo" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="522dp"
-        android:layout_height="55dp"
-        android:layout_below="@+id/idBtnLogin"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/imageView"
         android:layout_toRightOf="@+id/imageView"
-        android:text="@string/google_login"
-        android:textSize="18sp" />
+        android:layout_centerVertical="true">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/idEdtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="@string/enter_your_username"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#ffffff">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/idEdtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/idEdtEmail"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="@string/enter_password"
+            android:importantForAutofill="no"
+            android:textColorHint="#ffffff"
+            android:textColorLink="#000000">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <LinearLayout
+            android:layout_below="@id/idEdtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            >
+
+            <Button
+                android:id="@+id/idBtnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="193dp"
+                android:text="@string/login"
+                android:textColor="#ffffff"
+                app:backgroundTint="#2547A6" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/google_login" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
