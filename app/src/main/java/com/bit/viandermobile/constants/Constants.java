@@ -7,5 +7,6 @@ public interface Constants {
     String EMAIL_KEY = "email_key";
     String PASSWORD_KEY = "password_key";
     String TOKEN_KEY = "token_key";
+    String TOTAL_AMOUNT = "totalAmount";
 
 }

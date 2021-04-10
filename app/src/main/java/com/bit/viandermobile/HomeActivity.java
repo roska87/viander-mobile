@@ -12,11 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bit.viandermobile.constants.Constants;
 import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+
+import org.apache.commons.lang3.StringUtils;
 
 import static  com.bit.viandermobile.constants.Constants.*;
 
@@ -63,9 +66,22 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
+        Button confirmationBtn = findViewById(R.id.idBtnConfirmation);
+        confirmationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomeActivity.this, ConfirmationActivity.class);
+                i.putExtra(TOTAL_AMOUNT, 123);
+                startActivity(i);
+                finish();
+            }
+        });
+
+
         // initializing our textview and button.
         TextView welcomeTV = findViewById(R.id.idTVWelcome);
-        welcomeTV.setText("Welcome \n" + email);
+        welcomeTV.setText(StringUtils.join(getString(R.string.welcome), " ", email));
         Button logoutBtn = findViewById(R.id.idBtnLogout);
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
