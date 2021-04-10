@@ -22,4 +22,13 @@
     <string name="confirmation_thanks_message">Gracias por preferirnos!</string>
 
     <string name="back_to_home">Volver al inicio</string>
+
+    <string name="channel_name">viander_channel</string>
+    <string name="channel_description">viander</string>
+    <string name="channel_id">viander</string>
+
+    <string name="request_state">Estado del pedido</string>
+    <string name="request_confirm">Su pedido ha sido confirmado</string>
+
+
 </resources>
