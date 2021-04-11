@@ -33,6 +33,7 @@ public class SpecsActivity extends AppCompatActivity {
     private Button btnReset, btnConfirm;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -41,6 +42,7 @@ public class SpecsActivity extends AppCompatActivity {
 
         mPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         mEditor = mPreferences.edit();
+
         ch1 = (CheckBox) findViewById(R.id.checkbox1);
         ch2 = (CheckBox) findViewById(R.id.checkbox2);
         ch3 = (CheckBox) findViewById(R.id.checkbox3);
@@ -181,26 +183,59 @@ public class SpecsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (ch1.isChecked())
                     ch1.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox), "False");
+                    mEditor.commit();
+
                 if (ch2.isChecked())
                     ch2.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox2), "False");
+                    mEditor.commit();
+
                 if (ch3.isChecked())
                     ch3.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox3), "False");
+                    mEditor.commit();
+
                 if (ch4.isChecked())
                     ch4.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox4), "False");
+                    mEditor.commit();
+
                 if (ch5.isChecked())
                     ch5.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox5), "False");
+                    mEditor.commit();
+
                 if (ch6.isChecked())
                     ch6.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox6), "False");
+                    mEditor.commit();
+
                 if (ch7.isChecked())
                     ch7.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox7), "False");
+                    mEditor.commit();
+
                 if (ch8.isChecked())
                     ch8.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox8), "False");
+                    mEditor.commit();
+
                 if (ch9.isChecked())
                     ch9.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox9), "False");
+                    mEditor.commit();
+
                 if (ch10.isChecked())
                     ch10.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox10), "False");
+                    mEditor.commit();
+
                 if (ch11.isChecked())
                     ch11.setChecked(false);
+                    mEditor.putString(getString(R.string.checkbox11), "False");
+                    mEditor.commit();
+
 
                 StringBuffer result2 = new StringBuffer();
                 result2.append("Selección eliminada");
