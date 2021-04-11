@@ -47,4 +47,17 @@
 
     <string name="reset_btn">Limpiar</string>
     <string name="confirm">Confirmar</string>
+
+    <string name="checkbox">com.bit.viandermobile.checkbox</string>
+    <string name="checkbox2">com.bit.viandermobile.checkbox2</string>
+    <string name="checkbox3">com.bit.viandermobile.checkbox3</string>
+    <string name="checkbox4">com.bit.viandermobile.checkbox4</string>
+    <string name="checkbox5">com.bit.viandermobile.checkbox5</string>
+    <string name="checkbox6">com.bit.viandermobile.checkbox6</string>
+    <string name="checkbox7">com.bit.viandermobile.checkbox7</string>
+    <string name="checkbox8">com.bit.viandermobile.checkbox8</string>
+    <string name="checkbox9">com.bit.viandermobile.checkbox9</string>
+    <string name="checkbox10">com.bit.viandermobile.checkbox10</string>
+    <string name="checkbox11">com.bit.viandermobile.checkbox11</string>
+
 </resources>

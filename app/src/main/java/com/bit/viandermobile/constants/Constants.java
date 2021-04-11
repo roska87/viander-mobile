@@ -8,5 +8,6 @@ public interface Constants {
     String PASSWORD_KEY = "password_key";
     String TOKEN_KEY = "token_key";
     String TOTAL_AMOUNT = "totalAmount";
+    String CHECKBOX_KEY = "checkbox_status";
 
 }
