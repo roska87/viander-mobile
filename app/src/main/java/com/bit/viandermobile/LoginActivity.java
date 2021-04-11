@@ -17,12 +17,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bit.viandermobile.constants.Constants;
 import com.bit.viandermobile.entities.Session;
 import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import static  com.bit.viandermobile.constants.Constants.*;
@@ -61,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.loginLayout), R.string.coming_soon, Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -72,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 // to check if the user fields are empty or not.
                 if (TextUtils.isEmpty(emailEdt.getText().toString()) || TextUtils.isEmpty(passwordEdt.getText().toString())) {
                     // this method will call when email and password fields are empty.
-                    Toast.makeText(LoginActivity.this, R.string.enter_fields_login, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.loginLayout), R.string.enter_fields_login, Snackbar.LENGTH_LONG).show();
                 } else {
                     SharedPreferences.Editor editor = sharedpreferences.edit();
 
@@ -115,6 +117,24 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(i);
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        EditText emailEdt = ((TextInputLayout) findViewById(R.id.idEdtEmail)).getEditText();
+        EditText passwordEdt = ((TextInputLayout) findViewById(R.id.idEdtPassword)).getEditText();
+        outState.putString(USERNAME_KEY, emailEdt.getText().toString());
+        outState.putString(PASSWORD_KEY, passwordEdt.getText().toString());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        EditText emailEdt = ((TextInputLayout) findViewById(R.id.idEdtEmail)).getEditText();
+        EditText passwordEdt = ((TextInputLayout) findViewById(R.id.idEdtPassword)).getEditText();
+        emailEdt.setText(savedInstanceState.getString(USERNAME_KEY));
+        passwordEdt.setText(savedInstanceState.getString(PASSWORD_KEY));
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
