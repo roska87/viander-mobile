@@ -30,5 +30,21 @@
     <string name="request_state">Estado del pedido</string>
     <string name="request_confirm">Su pedido ha sido confirmado</string>
 
+    <string name="categories">Categorías </string>
+    <string name="no_meat">Sin carne</string>
+    <string name="no_salt">Sin sal</string>
+    <string name="no_gluten">Sin gluten</string>
+    <string name="no_sugar">Sin azúcar</string>
 
+    <string name="weekly_days">Días semanales </string>
+    <string name="sunday">Domingo</string>
+    <string name="monday">Lunes</string>
+    <string name="tuesday">Martes</string>
+    <string name="wednesday">Miercoles</string>
+    <string name="thursday">Jueves</string>
+    <string name="friday">Viernes</string>
+    <string name="saturday">Sabado</string>
+
+    <string name="reset_btn">Limpiar</string>
+    <string name="confirm">Confirmar</string>
 </resources>
