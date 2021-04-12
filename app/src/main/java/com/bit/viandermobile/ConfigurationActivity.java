@@ -108,16 +108,18 @@ public class ConfigurationActivity extends AppCompatActivity {
             @Override
             public void onChanged(UserDto userDto) {
                 String filterStr = userDto.getProfile().getFilters();
-                String[] filters = filterStr.split(",");
-                for(String filter : filters){
-                    if(filter.equals(getString(R.string.celiac))){
-                        chCeliac.setChecked(true);
-                    }else if(filter.equals(getString(R.string.diabetic))){
-                        chDiabetic.setChecked(true);
-                    }else if(filter.equals(getString(R.string.vegan))){
-                        chVegan.setChecked(true);
-                    }else{
-                        // TODO actualizar celda de tags
+                if(!StringUtils.isEmpty(filterStr)){
+                    String[] filters = filterStr.split(",");
+                    for(String filter : filters){
+                        if(filter.equals(getString(R.string.celiac))){
+                            chCeliac.setChecked(true);
+                        }else if(filter.equals(getString(R.string.diabetic))){
+                            chDiabetic.setChecked(true);
+                        }else if(filter.equals(getString(R.string.vegan))){
+                            chVegan.setChecked(true);
+                        }else{
+                            // TODO actualizar celda de tags
+                        }
                     }
                 }
                 // TODO actualizar dias

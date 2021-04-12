@@ -71,10 +71,10 @@ public class VianderViewModel extends AndroidViewModel {
     }
 
     public void updateProfile(String token, String username, List<Pair<Boolean, String>> filterList){
-        if(filterList == null || filterList.isEmpty()){
-            return;
+        String filters = null;
+        if(filterList != null && !filterList.isEmpty()){
+            filters = formatFilters(filterList);
         }
-        String filters = formatFilters(filterList);
         ProfileDto profileDto = new ProfileDto();
         profileDto.setFilters(filters);
         vianderRepository.updateProfile(token, username, profileDto);
