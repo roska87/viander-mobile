@@ -48,7 +48,7 @@
 
     <string name="reset_btn">Limpiar</string>
     <string name="confirm">Confirmar</string>
-    <string name="configuration_updated">Configuración actualizada</string>
+    <string name="chip">Excluye un ingrediente</string>
     <string name="configuration_updated">Configuración actualizada</string>
 
     <string name="checkbox">com.bit.viandermobile.checkbox</string>

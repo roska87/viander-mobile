@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Pair;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.VianderViewModel;
 import com.hootsuite.nachos.NachoTextView;
 import com.hootsuite.nachos.chip.Chip;
+import com.hootsuite.nachos.chip.ChipInfo;
 import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 
 import org.apache.commons.lang3.StringUtils;
@@ -96,6 +99,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                 if(chVegan.isChecked()){
                     containList.add(Pair.create(true, getString(R.string.vegan)));
                 }
+                for(String value : vChip.getChipValues()){
+                    containList.add(Pair.create(false, value));
+                }
                 List<Integer> weekDays = new ArrayList<>();
                 if(chSunday.isChecked()){
                     weekDays.add(SUNDAY);
@@ -140,6 +146,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 chThursday.setChecked(false);
                 chFriday.setChecked(false);
                 chSaturday.setChecked(false);
+                vChip.setTextWithChips(new ArrayList<>());
             }
         });
 
@@ -149,6 +156,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 String filterStr = userDto.getProfile().getFilters();
                 if(!StringUtils.isEmpty(filterStr)){
                     String[] filters = filterStr.split(",");
+                    List<ChipInfo> chipList = new ArrayList<>();
                     for(String filter : filters){
                         if(filter.equals(getString(R.string.celiac))){
                             chCeliac.setChecked(true);
@@ -157,9 +165,12 @@ public class ConfigurationActivity extends AppCompatActivity {
                         }else if(filter.equals(getString(R.string.vegan))){
                             chVegan.setChecked(true);
                         }else{
-                            // TODO actualizar celda de tags
+                            String word = filter.replace("!", "");
+                            ChipInfo ci = new ChipInfo(word, word);
+                            chipList.add(ci);
                         }
                     }
+                    vChip.setTextWithChips(chipList);
                 }
                 String weekDaysStr = userDto.getProfile().getWeekDays();
                 if(!StringUtils.isEmpty(weekDaysStr)){
@@ -194,6 +205,15 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
 }

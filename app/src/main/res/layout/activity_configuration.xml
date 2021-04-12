@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_weight="0"
-    android:background="#74AA57"
+    android:background="@color/common_background"
     android:orientation="vertical"
     android:id="@+id/activityConfiguration"
     tools:context=".HomeActivity">
