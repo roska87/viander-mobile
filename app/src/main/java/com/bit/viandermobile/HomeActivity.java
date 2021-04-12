@@ -11,16 +11,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.bit.viandermobile.constants.Constants;
 import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
-
 import org.apache.commons.lang3.StringUtils;
-
 import static  com.bit.viandermobile.constants.Constants.*;
 
 import java.util.List;

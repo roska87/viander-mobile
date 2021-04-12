@@ -1,15 +1,11 @@
 package com.bit.viandermobile.repositories;
 
 import android.app.Application;
-import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
-
-import androidx.core.util.Pair;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-
 import com.bit.viandermobile.R;
 import com.bit.viandermobile.domain.LoginDto;
 import com.bit.viandermobile.domain.LoginRequestDto;
@@ -22,17 +18,11 @@ import com.bit.viandermobile.rest.RestApiClient;
 import com.bit.viandermobile.rest.RestApiInterface;
 import com.bit.viandermobile.utils.TokenUtil;
 import com.google.android.gms.common.util.CollectionUtils;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.IOException;
+import static org.apache.commons.lang3.StringUtils.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -91,7 +81,8 @@ public class VianderRepository {
             @Override
             public void onFailure(Call<LoginDto> call, Throwable t) {
                 Log.d("", "", t);
-                Toast.makeText(application.getApplicationContext(), "Error en login: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String message = join(application.getApplicationContext().getString(R.string.invalid_credentials), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -108,7 +99,8 @@ public class VianderRepository {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(application.getApplicationContext(), "Error en logout: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String message = join(application.getApplicationContext().getString(R.string.error_logout), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -118,7 +110,8 @@ public class VianderRepository {
             @Override
             public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
                 if(CollectionUtils.isEmpty(response.body())){
-                    Toast.makeText(application.getApplicationContext(), "Usuario no encontrado", Toast.LENGTH_LONG).show();
+                    String message = join(application.getApplicationContext().getString(R.string.error_user_not_found));
+                    Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     return;
                 }
                 loggedUser.setValue(response.body().get(0));
@@ -126,7 +119,8 @@ public class VianderRepository {
 
             @Override
             public void onFailure(Call<List<UserDto>> call, Throwable t) {
-                Toast.makeText(application.getApplicationContext(), "Error al obtener usuario: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String message = join(application.getApplicationContext().getString(R.string.error_get_user), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -143,20 +137,22 @@ public class VianderRepository {
                     @Override
                     public void onResponse(Call<ProfileDto> call, Response<ProfileDto> response) {
                         getUser(token, username);
-                        Log.i("Perfil", "actualziado");
+                        Log.i("Perfil", "actualizado");
                     }
 
                     @Override
                     public void onFailure(Call<ProfileDto> call, Throwable t) {
                         Log.e("Perfil error: ", t.getMessage());
-                        Toast.makeText(application.getApplicationContext(), "Error al actualizar perfil: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        String message = join(application.getApplicationContext().getString(R.string.error_profile_update), " ", t.getMessage());
+                        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
                 });
             }
 
             @Override
             public void onFailure(Call<List<UserDto>> call, Throwable t) {
-                Toast.makeText(application.getApplicationContext(), "Error al obtener perfil: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String message = join(application.getApplicationContext().getString(R.string.error_get_profile), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -173,7 +169,8 @@ public class VianderRepository {
 
             @Override
             public void onFailure(Call<PostDto> call, Throwable t) {
-                Toast.makeText(application.getApplicationContext(), "Error al obtener post: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String message = join(application.getApplicationContext().getString(R.string.error_get_post), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -195,7 +192,8 @@ public class VianderRepository {
 
             @Override
             public void onFailure(Call<PostRandomDto> call, Throwable t) {
-                Toast.makeText(application.getApplicationContext(), "Error al obtener random posts: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String message = join(application.getApplicationContext().getString(R.string.error_get_random_post), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -215,7 +213,8 @@ public class VianderRepository {
 
             @Override
             public void onFailure(Call<PostRandomDto> call, Throwable t) {
-                Toast.makeText(application.getApplicationContext(), "Error al cambiar random posts: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                String message = join(application.getApplicationContext().getString(R.string.error_change_random_post), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -232,8 +231,8 @@ public class VianderRepository {
                 contains.add(filter);
             }
         }
-        String containsStr = StringUtils.join(contains, ",");
-        String notContainsStr = StringUtils.join(notContains, ",");
+        String containsStr = join(contains, ",");
+        String notContainsStr = join(notContains, ",");
         return new PostRandomRequestDto(containsStr, notContainsStr);
     }
 
