@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="0"
+    android:background="@color/common_background"
+    android:orientation="vertical"
+    tools:context=".HomeActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:paddingBottom="20dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
+
+            <TextView
+                android:id="@+id/textViewCategories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="41dp"
+                android:layout_marginLeft="41dp"
+                android:layout_marginTop="40dp"
+                android:fontFamily="sans-serif-medium"
+                android:includeFontPadding="false"
+                android:shadowColor="#0270E4"
+                android:text="@string/categories"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <CheckBox
+                android:id="@+id/checkboxCeliac"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/textViewCategories"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/celiac"
+                android:textSize="16sp" />
+
+
+            <CheckBox
+                android:id="@+id/checkboxDiabetic"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxCeliac"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/diabetic"
+                android:textSize="16sp" />
+
+            <CheckBox
+                android:id="@+id/checkboxVegan"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxDiabetic"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/vegan"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/checkboxVegan"
+                android:layout_marginStart="39dp"
+                android:layout_marginLeft="39dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:fontFamily="sans-serif-medium"
+                android:shadowColor="#2B2B2B"
+                android:text="@string/weekly_days"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <CheckBox
+                android:id="@+id/checkboxSunday"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/textViewWeek"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/sunday" />
+
+            <CheckBox
+                android:id="@+id/checkboxMonday"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxSunday"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/monday" />
+
+            <CheckBox
+                android:id="@+id/checkboxTuesday"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxMonday"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/tuesday" />
+
+            <CheckBox
+                android:id="@+id/checkboxWednesday"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxTuesday"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/wednesday" />
+
+            <CheckBox
+                android:id="@+id/checkboxThursday"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxWednesday"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/thursday" />
+
+            <CheckBox
+                android:id="@+id/checkboxFriday"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxThursday"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/friday" />
+
+            <CheckBox
+                android:id="@+id/checkboxSaturday"
+                android:layout_width="231dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/checkboxFriday"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginLeft="126dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"
+                android:text="@string/saturday" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btnReset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/reset_btn"
+                android:textColor="#ffffff" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btnConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="false"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/confirm"
+                android:textColor="#ffffffff" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

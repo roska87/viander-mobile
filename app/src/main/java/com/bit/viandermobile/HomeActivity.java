@@ -31,8 +31,8 @@ public class HomeActivity extends AppCompatActivity {
     private SessionViewModel sessionViewModel;
 
     // variable for shared preferences.
-    SharedPreferences sharedpreferences;
-    String email, username, token;
+    private SharedPreferences sharedpreferences;
+    private String email, username, token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        Button configurationBtn = findViewById(R.id.idBtnConfiguration);
+        configurationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomeActivity.this, ConfigurationActivity.class);
+                startActivity(i);
+            }
+        });
 
         Button confirmationBtn = findViewById(R.id.idBtnConfirmation);
         confirmationBtn.setOnClickListener(new View.OnClickListener() {

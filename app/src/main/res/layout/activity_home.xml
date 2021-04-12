@@ -32,10 +32,20 @@
         android:gravity="center_horizontal" />
 
     <Button
-        android:id="@+id/idBtnConfirmation"
+        android:id="@+id/idBtnConfiguration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/idPost"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/configuration" />
+
+    <Button
+        android:id="@+id/idBtnConfirmation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idBtnConfiguration"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
