@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.domain.ProfileDto;
@@ -41,6 +42,10 @@ public class VianderViewModel extends AndroidViewModel {
         return loggedUser;
     }
 
+    public void refreshLoggedUser(String token, String username){
+        vianderRepository.getUser(token, username);
+    }
+
     public LiveData<String> getToken(){
         return token;
     }
@@ -65,14 +70,14 @@ public class VianderViewModel extends AndroidViewModel {
         vianderRepository.logout();
     }
 
-    public void updateProfile(List<Pair<Boolean, String>> filterList){
+    public void updateProfile(String token, String username, List<Pair<Boolean, String>> filterList){
         if(filterList == null || filterList.isEmpty()){
             return;
         }
         String filters = formatFilters(filterList);
-        ProfileDto profileDto = loggedUser.getValue().getProfile();
+        ProfileDto profileDto = new ProfileDto();
         profileDto.setFilters(filters);
-        vianderRepository.updateProfile(profileDto);
+        vianderRepository.updateProfile(token, username, profileDto);
     }
 
     public void getPost(String token, int id){

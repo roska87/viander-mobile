@@ -39,7 +39,6 @@ import retrofit2.Response;
 public class VianderRepository {
 
     private RestApiInterface apiService = RestApiClient.getClient().create(RestApiInterface.class);
-    private MutableLiveData<String> username = new MutableLiveData<>();
     private MutableLiveData<UserDto> loggedUser = new MutableLiveData<>();
     private MutableLiveData<String> token = new MutableLiveData<>();
     private MutableLiveData<List<PostDto>> viandsMenu = new MutableLiveData<>();
@@ -66,19 +65,18 @@ public class VianderRepository {
         return randomPosts;
     }
 
-    public void login(String username2, String password){
-        Log.i("username", username2);
+    public void login(String username, String password){
+        Log.i("username", username);
         Log.i("password", password);
-        LoginRequestDto login = new LoginRequestDto(username2, password);
+        LoginRequestDto login = new LoginRequestDto(username, password);
         apiService.login(login).enqueue(new Callback<LoginDto>() {
             @Override
             public void onResponse(Call<LoginDto> call, Response<LoginDto> response) {
                 if(response.body() != null && response.body().getKey() != null){
-                    token.setValue(formatLoginKey(response.body().getKey()));
-                    Log.i("login", token.getValue());
+                    String token = response.body().getKey();
+                    Log.i("login", token);
                     if(token != null){
-                        username.setValue(username2);
-                        getUser();
+                        getUser(token, username);
                     }
                 }
                 if(response.code() == 400){
@@ -99,7 +97,6 @@ public class VianderRepository {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loggedUser = new MutableLiveData<>();
-                username = new MutableLiveData<>();
                 viandsMenu = new MutableLiveData<>();
                 token = new MutableLiveData<>();
                 Log.i("logout", response.body().toString());
@@ -112,8 +109,8 @@ public class VianderRepository {
         });
     }
 
-    private void getUser(){
-        apiService.getUserByUsername(token.getValue(), username.getValue()).enqueue(new Callback<List<UserDto>>() {
+    public void getUser(String token, String username){
+        apiService.getUserByUsername(token, username).enqueue(new Callback<List<UserDto>>() {
             @Override
             public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
                 loggedUser.setValue(response.body().get(0));
@@ -126,17 +123,31 @@ public class VianderRepository {
         });
     }
 
-    public void updateProfile(ProfileDto profileDto){
-        profileDto.setImage(null);
-        apiService.updateProfile(token.getValue(), profileDto).enqueue(new Callback<ProfileDto>() {
+    public void updateProfile(String token, String username, ProfileDto profileDto){
+        apiService.getUserByUsername(token, username).enqueue(new Callback<List<UserDto>>() {
             @Override
-            public void onResponse(Call<ProfileDto> call, Response<ProfileDto> response) {
-                getUser();
+            public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
+                UserDto user = response.body().get(0);
+                ProfileDto profile = user.getProfile();
+                profile.setFilters(profileDto.getFilters());
+                apiService.updateProfile(token, profile).enqueue(new Callback<ProfileDto>() {
+                    @Override
+                    public void onResponse(Call<ProfileDto> call, Response<ProfileDto> response) {
+                        getUser(token, username);
+                        Log.i("Perfil", "actualziado");
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProfileDto> call, Throwable t) {
+                        Log.e("Perfil error: ", t.getMessage());
+                        Toast.makeText(application.getApplicationContext(), "Error al actualizar perfil: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Call<ProfileDto> call, Throwable t) {
-                Toast.makeText(application.getApplicationContext(), "Error al actualizar perfil: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFailure(Call<List<UserDto>> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), "Error al obtener perfil: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

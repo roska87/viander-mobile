@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private VianderViewModel vianderViewModel;
     private SessionViewModel sessionViewModel;
 
-    SharedPreferences sharedpreferences;
-    String token;
+    private SharedPreferences sharedPreferences;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         Button loginBtn = findViewById(R.id.idBtnLogin);
 
         // getting the data which is stored in shared preferences.
-        sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         vianderViewModel = new ViewModelProvider(this, new VianderFactory(getApplication())).get(VianderViewModel.class);
         sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
 
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                     // this method will call when email and password fields are empty.
                     Snackbar.make(findViewById(R.id.loginLayout), R.string.enter_fields_login, Snackbar.LENGTH_LONG).show();
                 } else {
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
 
                     String email = emailEdt.getText().toString();
                     String password = passwordEdt.getText().toString();
