@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -25,6 +27,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.hootsuite.nachos.NachoTextView;
+import com.hootsuite.nachos.chip.Chip;
+import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,11 +53,19 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     private VianderViewModel vianderViewModel;
 
+    private NachoTextView vChip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
+
+        vChip = findViewById(R.id.vChip);
+        vChip.addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL);
+        boolean moveChipToEnd = false;
+        boolean chipifyUnterminatedTokens = true;
+        vChip.enableEditChipOnTouch(moveChipToEnd, chipifyUnterminatedTokens);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -121,6 +134,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                vChip.setText("");
                 chCeliac.setChecked(false);
                 chDiabetic.setChecked(false);
                 chVegan.setChecked(false);
@@ -157,7 +171,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                     String[] weekDays = weekDaysStr.split(",");
                     for(String weekDay : weekDays){
                         int weekDayInt = Integer.parseInt(weekDay);
-                        switch(weekDayInt){
+                        switch(weekDayInt){ 
                             case SUNDAY:
                                 chSunday.setChecked(true);
                                 break;

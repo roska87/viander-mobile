@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_weight="0"
-    android:background="@color/common_background"
+    android:background="#74AA57"
     android:orientation="vertical"
     tools:context=".HomeActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:fillViewport="true"
         android:paddingBottom="20dp">
@@ -20,23 +21,50 @@
             android:layout_height="wrap_content"
             android:paddingBottom="20dp">
 
+            <com.hootsuite.nachos.NachoTextView
+                android:id="@+id/vChip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="10dp"
+                android:background="#39F0F0F0"
+                android:hint="@string/chip"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingRight="10dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                app:chipBackground="#F38C35"
+                app:chipHeight="30dp"
+                app:chipTextColor="#fff"
+                app:chipTextSize="16dp"
+                app:chipVerticalSpacing="3dp" />
+
             <TextView
                 android:id="@+id/textViewCategories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/vChip"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="41dp"
                 android:layout_marginLeft="41dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-medium"
                 android:includeFontPadding="false"
                 android:shadowColor="#0270E4"
                 android:text="@string/categories"
-                android:textColor="#000000"
+                android:textColor="#FFF"
                 android:textSize="24sp" />
 
             <CheckBox
@@ -54,6 +82,7 @@
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
                 android:text="@string/celiac"
+                android:textColor="#FFF"
                 android:textSize="16sp" />
 
 
@@ -71,6 +100,7 @@
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
                 android:text="@string/diabetic"
+                android:textColor="#FFF"
                 android:textSize="16sp" />
 
             <CheckBox
@@ -87,6 +117,7 @@
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
                 android:text="@string/vegan"
+                android:textColor="#FFF"
                 android:textSize="16sp" />
 
             <TextView
@@ -102,7 +133,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:shadowColor="#2B2B2B"
                 android:text="@string/weekly_days"
-                android:textColor="#000000"
+                android:textColor="#FFF"
                 android:textSize="24sp" />
 
             <CheckBox
@@ -119,7 +150,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/sunday" />
+                android:text="@string/sunday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxMonday"
@@ -135,7 +167,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/monday" />
+                android:text="@string/monday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxTuesday"
@@ -151,7 +184,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/tuesday" />
+                android:text="@string/tuesday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxWednesday"
@@ -167,7 +201,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/wednesday" />
+                android:text="@string/wednesday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxThursday"
@@ -183,7 +218,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/thursday" />
+                android:text="@string/thursday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxFriday"
@@ -199,7 +235,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/friday" />
+                android:text="@string/friday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxSaturday"
@@ -215,7 +252,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/saturday" />
+                android:text="@string/saturday"
+                android:textColor="#FFF" />
         </RelativeLayout>
     </ScrollView>
 
