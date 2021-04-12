@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = null;
                         if(session == null){
                             Log.i("Launch", "Login");
-                            intent = new Intent(MainActivity.this, ConfigurationActivity.class);
+                            intent = new Intent(MainActivity.this, LoginActivity.class);
                         }else{
                             Log.i("Launch", "Home");
                             intent = new Intent(MainActivity.this, HomeActivity.class);
