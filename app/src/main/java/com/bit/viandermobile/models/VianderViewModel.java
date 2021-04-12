@@ -17,6 +17,8 @@ import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.repositories.VianderRepository;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,13 +72,14 @@ public class VianderViewModel extends AndroidViewModel {
         vianderRepository.logout();
     }
 
-    public void updateProfile(String token, String username, List<Pair<Boolean, String>> filterList){
+    public void updateProfile(String token, String username, List<Pair<Boolean, String>> filterList, List<Integer> weekDays){
         String filters = null;
         if(filterList != null && !filterList.isEmpty()){
             filters = formatFilters(filterList);
         }
         ProfileDto profileDto = new ProfileDto();
         profileDto.setFilters(filters);
+        profileDto.setWeekDays(StringUtils.join(weekDays, ","));
         vianderRepository.updateProfile(token, username, profileDto);
     }
 
