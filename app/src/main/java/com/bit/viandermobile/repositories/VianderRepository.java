@@ -20,6 +20,8 @@ import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.rest.RestApiClient;
 import com.bit.viandermobile.rest.RestApiInterface;
+import com.bit.viandermobile.utils.TokenUtil;
+import com.google.android.gms.common.util.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -73,10 +75,12 @@ public class VianderRepository {
             @Override
             public void onResponse(Call<LoginDto> call, Response<LoginDto> response) {
                 if(response.body() != null && response.body().getKey() != null){
-                    String token = response.body().getKey();
-                    Log.i("login", token);
-                    if(token != null){
-                        getUser(token, username);
+                    String tokenKey = response.body().getKey();
+                    Log.i("login", tokenKey);
+                    if(tokenKey != null){
+                        String tokenStr = TokenUtil.formatTokenKey(tokenKey);
+                        token.setValue(tokenStr);
+                        getUser(tokenStr, username);
                     }
                 }
                 if(response.code() == 400){
@@ -113,6 +117,10 @@ public class VianderRepository {
         apiService.getUserByUsername(token, username).enqueue(new Callback<List<UserDto>>() {
             @Override
             public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
+                if(CollectionUtils.isEmpty(response.body())){
+                    Toast.makeText(application.getApplicationContext(), "Usuario no encontrado", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 loggedUser.setValue(response.body().get(0));
             }
 
@@ -130,6 +138,7 @@ public class VianderRepository {
                 UserDto user = response.body().get(0);
                 ProfileDto profile = user.getProfile();
                 profile.setFilters(profileDto.getFilters());
+                profile.setWeekDays(profileDto.getWeekDays());
                 apiService.updateProfile(token, profile).enqueue(new Callback<ProfileDto>() {
                     @Override
                     public void onResponse(Call<ProfileDto> call, Response<ProfileDto> response) {
@@ -209,13 +218,6 @@ public class VianderRepository {
                 Toast.makeText(application.getApplicationContext(), "Error al cambiar random posts: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private String formatLoginKey(String loginKey){
-        if(TextUtils.isEmpty(loginKey)){
-            return null;
-        }
-        return "Token " + loginKey;
     }
 
     private PostRandomRequestDto getFilters(){

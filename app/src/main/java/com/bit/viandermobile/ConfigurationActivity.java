@@ -8,6 +8,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,9 +28,16 @@ import com.bit.viandermobile.models.VianderViewModel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import static com.bit.viandermobile.constants.Constants.FRIDAY;
+import static com.bit.viandermobile.constants.Constants.MONDAY;
+import static com.bit.viandermobile.constants.Constants.SATURDAY;
 import static com.bit.viandermobile.constants.Constants.SHARED_PREFS;
+import static com.bit.viandermobile.constants.Constants.SUNDAY;
+import static com.bit.viandermobile.constants.Constants.THURSDAY;
 import static com.bit.viandermobile.constants.Constants.TOKEN_KEY;
+import static com.bit.viandermobile.constants.Constants.TUESDAY;
 import static com.bit.viandermobile.constants.Constants.USERNAME_KEY;
+import static com.bit.viandermobile.constants.Constants.WEDNESDAY;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
@@ -80,7 +88,29 @@ public class ConfigurationActivity extends AppCompatActivity {
                 if(chVegan.isChecked()){
                     containList.add(Pair.create(true, getString(R.string.vegan)));
                 }
-                vianderViewModel.updateProfile(token, username, containList);
+                List<Integer> weekDays = new ArrayList<>();
+                if(chSunday.isChecked()){
+                    weekDays.add(SUNDAY);
+                }
+                if(chMonday.isChecked()){
+                    weekDays.add(MONDAY);
+                }
+                if(chTuesday.isChecked()){
+                    weekDays.add(TUESDAY);
+                }
+                if(chWednesday.isChecked()){
+                    weekDays.add(WEDNESDAY);
+                }
+                if(chThursday.isChecked()){
+                    weekDays.add(THURSDAY);
+                }
+                if(chFriday.isChecked()){
+                    weekDays.add(FRIDAY);
+                }
+                if(chSaturday.isChecked()){
+                    weekDays.add(SATURDAY);
+                }
+                vianderViewModel.updateProfile(token, username, containList, weekDays);
                 Toast.makeText(ConfigurationActivity.this, "Confirmado", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ConfigurationActivity.this, HomeActivity.class);
                 startActivity(intent);
@@ -122,7 +152,36 @@ public class ConfigurationActivity extends AppCompatActivity {
                         }
                     }
                 }
-                // TODO actualizar dias
+                String weekDaysStr = userDto.getProfile().getWeekDays();
+                if(!StringUtils.isEmpty(weekDaysStr)){
+                    String[] weekDays = weekDaysStr.split(",");
+                    for(String weekDay : weekDays){
+                        int weekDayInt = Integer.parseInt(weekDay);
+                        switch(weekDayInt){
+                            case SUNDAY:
+                                chSunday.setChecked(true);
+                                break;
+                            case MONDAY:
+                                chMonday.setChecked(true);
+                                break;
+                            case TUESDAY:
+                                chTuesday.setChecked(true);
+                                break;
+                            case WEDNESDAY:
+                                chWednesday.setChecked(true);
+                                break;
+                            case THURSDAY:
+                                chThursday.setChecked(true);
+                                break;
+                            case FRIDAY:
+                                chFriday.setChecked(true);
+                                break;
+                            case SATURDAY:
+                                chSaturday.setChecked(true);
+                                break;
+                        }
+                    }
+                }
             }
         });
 

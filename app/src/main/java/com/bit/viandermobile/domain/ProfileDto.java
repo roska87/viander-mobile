@@ -10,14 +10,17 @@ public class ProfileDto {
     private String image;
     @SerializedName("filters")
     private String filters;
+    @SerializedName("week_days")
+    private String weekDays;
 
     public ProfileDto() {
     }
 
-    public ProfileDto(int id, String image, String filters) {
+    public ProfileDto(int id, String image, String filters, String weekDays) {
         this.id = id;
         this.image = image;
         this.filters = filters;
+        this.weekDays = weekDays;
     }
 
     public int getId() {
@@ -42,5 +45,13 @@ public class ProfileDto {
 
     public void setFilters(String filters) {
         this.filters = filters;
+    }
+
+    public String getWeekDays() {
+        return weekDays;
+    }
+
+    public void setWeekDays(String weekDays) {
+        this.weekDays = weekDays;
     }
 }
