@@ -48,6 +48,7 @@
 
     <string name="reset_btn">Limpiar</string>
     <string name="confirm">Confirmar</string>
+    <string name="chip">Excluye un ingrediente</string>
 
     <string name="checkbox">com.bit.viandermobile.checkbox</string>
     <string name="checkbox2">com.bit.viandermobile.checkbox2</string>
