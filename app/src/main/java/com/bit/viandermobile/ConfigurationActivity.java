@@ -36,7 +36,6 @@ import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 import com.hootsuite.nachos.chip.ChipInfo;
 
 import org.apache.commons.lang3.StringUtils;
@@ -300,7 +299,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         if(chipGroup.getChildCount() - 1 >= chipLimit){
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            Snackbar.make(findViewById(R.id.recipient_input_ET), "Ha alcanzado el máximo de elementos", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.recipient_input_ET), getString(R.string.chips_max_count), Snackbar.LENGTH_LONG).show();
             return true;
         }
         return false;
