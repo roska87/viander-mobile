@@ -65,4 +65,13 @@ public class PostDto {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "PostDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", file='" + file + '\'' +
+                '}';
+    }
 }

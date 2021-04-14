@@ -1,42 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_weight="0"
     android:background="@color/common_background"
     android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:id="@+id/activityConfiguration"
     tools:context=".HomeActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:fillViewport="true"
-        android:paddingBottom="20dp">
+        android:layout_marginBottom="15dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp">
 
+            <!-- Start Linear layout for chips -->
+            <LinearLayout
+                android:id="@+id/idLinearChips"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/recipient_label_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical" />
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/recipient_group_FL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    app:flexWrap="wrap"
+                    app:showDivider="beginning|middle|end">
+
+                    <EditText
+                        android:id="@+id/recipient_input_ET"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginLeft="2dp"
+                        app:layout_flexGrow="1"
+                        android:background="@android:color/transparent"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:hint="Ingresar"/>
+
+                </com.google.android.flexbox.FlexboxLayout>
+
+            </LinearLayout>
+            <!-- End Linear layout for chips -->
+
             <TextView
                 android:id="@+id/textViewCategories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/idLinearChips"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="41dp"
                 android:layout_marginLeft="41dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-medium"
                 android:includeFontPadding="false"
                 android:shadowColor="#0270E4"
                 android:text="@string/categories"
-                android:textColor="#000000"
+                android:textColor="#FFF"
                 android:textSize="24sp" />
 
             <CheckBox
@@ -54,6 +99,7 @@
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
                 android:text="@string/celiac"
+                android:textColor="#FFF"
                 android:textSize="16sp" />
 
 
@@ -71,6 +117,7 @@
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
                 android:text="@string/diabetic"
+                android:textColor="#FFF"
                 android:textSize="16sp" />
 
             <CheckBox
@@ -87,6 +134,7 @@
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
                 android:text="@string/vegan"
+                android:textColor="#FFF"
                 android:textSize="16sp" />
 
             <TextView
@@ -102,7 +150,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:shadowColor="#2B2B2B"
                 android:text="@string/weekly_days"
-                android:textColor="#000000"
+                android:textColor="#FFF"
                 android:textSize="24sp" />
 
             <CheckBox
@@ -119,7 +167,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/sunday" />
+                android:text="@string/sunday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxMonday"
@@ -135,7 +184,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/monday" />
+                android:text="@string/monday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxTuesday"
@@ -151,7 +201,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/tuesday" />
+                android:text="@string/tuesday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxWednesday"
@@ -167,7 +218,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/wednesday" />
+                android:text="@string/wednesday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxThursday"
@@ -183,7 +235,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/thursday" />
+                android:text="@string/thursday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxFriday"
@@ -199,7 +252,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/friday" />
+                android:text="@string/friday"
+                android:textColor="#FFF" />
 
             <CheckBox
                 android:id="@+id/checkboxSaturday"
@@ -215,7 +269,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="54dp"
                 android:layout_marginRight="54dp"
-                android:text="@string/saturday" />
+                android:text="@string/saturday"
+                android:textColor="#FFF" />
         </RelativeLayout>
     </ScrollView>
 
@@ -269,5 +324,7 @@
                 android:textColor="#ffffffff" />
         </RelativeLayout>
     </LinearLayout>
+
+    <!--<include layout="@layout/simple_dropdown_item_1line"/>-->
 
 </LinearLayout>

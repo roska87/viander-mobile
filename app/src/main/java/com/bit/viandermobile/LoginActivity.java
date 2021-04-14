@@ -15,9 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bit.viandermobile.constants.Constants;
 import com.bit.viandermobile.entities.Session;
 import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;

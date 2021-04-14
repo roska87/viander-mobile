@@ -5,6 +5,8 @@
     android:id="@+id/loginLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:background="#009688"
     tools:context=".LoginActivity">
 

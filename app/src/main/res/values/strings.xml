@@ -48,6 +48,8 @@
 
     <string name="reset_btn">Limpiar</string>
     <string name="confirm">Confirmar</string>
+    <string name="chip">Excluye un ingrediente</string>
+    <string name="configuration_updated">Configuración actualizada</string>
 
     <string name="checkbox">com.bit.viandermobile.checkbox</string>
     <string name="checkbox2">com.bit.viandermobile.checkbox2</string>
@@ -60,5 +62,16 @@
     <string name="checkbox9">com.bit.viandermobile.checkbox9</string>
     <string name="checkbox10">com.bit.viandermobile.checkbox10</string>
     <string name="checkbox11">com.bit.viandermobile.checkbox11</string>
+
+    <string name="error_login">Error en login:</string>
+    <string name="error_logout">Error en logout:</string>
+    <string name="error_user_not_found">Usuario no encontrado</string>
+    <string name="error_get_user">Error al obtener usuario:</string>
+    <string name="error_profile_update">Error al actualizar perfil:</string>
+    <string name="error_get_profile">Error al obtener perfil:</string>
+    <string name="error_get_post">Error al obtener post:</string>
+    <string name="error_get_random_post">Error al obtener random posts:</string>
+    <string name="error_change_random_post">Error al cambiar random posts:</string>
+
 
 </resources>

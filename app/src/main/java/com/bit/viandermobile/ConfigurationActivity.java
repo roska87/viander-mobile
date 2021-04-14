@@ -4,27 +4,40 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Pair;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Switch;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.google.android.flexbox.AlignContent;
+import com.google.android.flexbox.AlignItems;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.JustifyContent;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.hootsuite.nachos.chip.ChipInfo;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,12 +54,20 @@ import static com.bit.viandermobile.constants.Constants.WEDNESDAY;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
+    private static final int CHIP_LIMIT = 20;
+
     private SharedPreferences sharedPreferences;
     private String username, token;
 
-    private CheckBox chCeliac, chDiabetic, chVegan, chSunday, chMonday, chTuesday, chWednesday, chThursday, chFriday, chSaturday;
+    private CheckBox chCeliac, chDiabetic, chVegan;
+    private CheckBox chSunday, chMonday, chTuesday, chWednesday, chThursday, chFriday, chSaturday;
 
     private VianderViewModel vianderViewModel;
+    private TextInputEditText editText;
+
+    // chip elements
+    private EditText et;
+    private FlexboxLayout chipGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +81,9 @@ public class ConfigurationActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         username = sharedPreferences.getString(USERNAME_KEY, null);
         token = sharedPreferences.getString(TOKEN_KEY, null);
+
+        et = findViewById(R.id.recipient_input_ET);
+        chipGroup = findViewById(R.id.recipient_group_FL);
 
         chCeliac = findViewById(R.id.checkboxCeliac);
         chDiabetic = findViewById(R.id.checkboxDiabetic);
@@ -88,6 +112,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                 if(chVegan.isChecked()){
                     containList.add(Pair.create(true, getString(R.string.vegan)));
                 }
+                for(String value : getChipValues()){
+                    containList.add(Pair.create(false, value));
+                }
                 List<Integer> weekDays = new ArrayList<>();
                 if(chSunday.isChecked()){
                     weekDays.add(SUNDAY);
@@ -111,7 +138,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                     weekDays.add(SATURDAY);
                 }
                 vianderViewModel.updateProfile(token, username, containList, weekDays);
-                Toast.makeText(ConfigurationActivity.this, "Confirmado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ConfigurationActivity.this, R.string.configuration_updated, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ConfigurationActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -131,6 +158,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 chThursday.setChecked(false);
                 chFriday.setChecked(false);
                 chSaturday.setChecked(false);
+                removeChips();
             }
         });
 
@@ -140,6 +168,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 String filterStr = userDto.getProfile().getFilters();
                 if(!StringUtils.isEmpty(filterStr)){
                     String[] filters = filterStr.split(",");
+                    List<ChipInfo> chipList = new ArrayList<>();
                     for(String filter : filters){
                         if(filter.equals(getString(R.string.celiac))){
                             chCeliac.setChecked(true);
@@ -148,7 +177,8 @@ public class ConfigurationActivity extends AppCompatActivity {
                         }else if(filter.equals(getString(R.string.vegan))){
                             chVegan.setChecked(true);
                         }else{
-                            // TODO actualizar celda de tags
+                            String word = filter.replace("!", "");
+                            addNewChip(word, chipGroup);
                         }
                     }
                 }
@@ -157,7 +187,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                     String[] weekDays = weekDaysStr.split(",");
                     for(String weekDay : weekDays){
                         int weekDayInt = Integer.parseInt(weekDay);
-                        switch(weekDayInt){
+                        switch(weekDayInt){ 
                             case SUNDAY:
                                 chSunday.setChecked(true);
                                 break;
@@ -185,6 +215,126 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
+        // --------------------
+        // Start Chip functions
+        // --------------------
+        chipGroup.setFlexWrap(FlexWrap.WRAP);
+        chipGroup.setShowDivider(FlexboxLayout.SHOW_DIVIDER_MIDDLE);
+        chipGroup.setAlignItems(AlignItems.CENTER);
+        chipGroup.setJustifyContent(JustifyContent.SPACE_AROUND);
+        chipGroup.setAlignContent(AlignContent.STRETCH);
+
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                String str = v.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (str.length() > 1) {
+                        addNewChip(str, chipGroup);
+                        et.setText("");
+                    }
+                }
+                return false;
+            }
+        });
+
+        et.setOnClickListener(v -> {
+            if(controlChipLimit(chipGroup, CHIP_LIMIT)){
+                et.setText("");
+            }
+        });
+
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString();
+                if(TextUtils.isEmpty(str.trim())){
+                    s.clear();
+                    return;
+                }
+                if(controlChipLimit(chipGroup, CHIP_LIMIT)){
+                    s.clear();
+                }
+                if (str.length() > 1 && (str.endsWith(" ") || str.endsWith("\n"))) {
+                    addNewChip(str, chipGroup);
+                    s.clear();
+                    controlChipLimit(chipGroup, CHIP_LIMIT);
+
+                }
+            }
+        });
+
+        et.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                    if (et.length() == 0 && chipGroup.getChildCount() > 0) {
+                        Chip chip = (Chip) chipGroup.getChildAt(chipGroup.getChildCount() - 2);
+                        chipGroup.removeView(chip);
+                    }
+                }
+                return false;
+            }
+        });
+        // ------------------
+        // End Chip functions
+        // ------------------
+
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private boolean controlChipLimit(FlexboxLayout chipGroup, int chipLimit){
+        if(chipGroup.getChildCount() - 1 >= chipLimit){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            Snackbar.make(findViewById(R.id.recipient_input_ET), "Ha alcanzado el máximo de elementos", Snackbar.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
+
+    private void addNewChip(String text, FlexboxLayout chipGroup) {
+        Chip chip = new Chip(ConfigurationActivity.this);
+        chip.setText(text);
+        chip.setChipIcon(ChipDrawable.createFromResource(ConfigurationActivity.this, R.xml.standalone_chip));
+        chip.setCloseIconVisible(true);
+        chipGroup.addView(chip, chipGroup.getChildCount() - 1);
+        chip.setOnCloseIconClickListener(v -> chipGroup.removeView(chip));
+    }
+
+    private List<String> getChipValues(){
+        List<String> values = new ArrayList<>();
+        int childCount = chipGroup.getChildCount();
+        for(int i=0; i<childCount; i++){
+            View view = chipGroup.getChildAt(i);
+            if(view instanceof Chip){
+                Chip chip = (Chip) view;
+                values.add(chip.getText().toString());
+            }
+        }
+        return values;
+    }
+
+    private void removeChips(){
+        int childCount = chipGroup.getChildCount();
+        while(childCount > 1){
+            chipGroup.removeViewAt(0);
+            childCount = chipGroup.getChildCount();
+        }
     }
 
 }
