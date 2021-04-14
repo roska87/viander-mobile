@@ -325,6 +325,4 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <!--<include layout="@layout/simple_dropdown_item_1line"/>-->
-
 </LinearLayout>
