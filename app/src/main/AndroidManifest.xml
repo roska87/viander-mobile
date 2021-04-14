@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:configChanges="orientation|keyboardHidden"
         android:usesCleartextTraffic="true">
         <activity android:name=".ConfigurationActivity"
             android:label="@string/configuration"

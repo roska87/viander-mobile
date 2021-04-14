@@ -5,25 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ImageSpan;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,24 +24,20 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.google.android.flexbox.AlignContent;
 import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
-import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
-import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import com.hootsuite.nachos.NachoTextView;
 import com.hootsuite.nachos.chip.ChipInfo;
-import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -65,17 +54,20 @@ import static com.bit.viandermobile.constants.Constants.WEDNESDAY;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
+    private static final int CHIP_LIMIT = 20;
+
     private SharedPreferences sharedPreferences;
     private String username, token;
 
-    private CheckBox chCeliac, chDiabetic, chVegan, chSunday, chMonday, chTuesday, chWednesday, chThursday, chFriday, chSaturday;
+    private CheckBox chCeliac, chDiabetic, chVegan;
+    private CheckBox chSunday, chMonday, chTuesday, chWednesday, chThursday, chFriday, chSaturday;
 
     private VianderViewModel vianderViewModel;
-
-    private NachoTextView vChip;
     private TextInputEditText editText;
 
-    private int spannedLength = 0, chipLength = 4;
+    // chip elements
+    private EditText et;
+    private FlexboxLayout chipGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,158 +75,15 @@ public class ConfigurationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
 
-        final ChipGroup entryChipGroup = findViewById(R.id.entry_chip_group);
-
-        editText = findViewById(R.id.editText);
-
-        /*
-        ChipDrawable chipDrawable = ChipDrawable.createFromResource(ConfigurationActivity.this, R.xml.standalone_chip);
-        chipDrawable.setBounds(0, 0, chipDrawable.getIntrinsicWidth(), chipDrawable.getIntrinsicHeight());
-        ImageSpan span = new ImageSpan(chipDrawable);
-        Editable text = editText.getText();
-        text.append("hola");
-        text.setSpan(span, 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-         */
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-            @Override
-            public void afterTextChanged(Editable editable){
-                String text = editable.toString();
-                if(text.endsWith(" ")){
-                    text = text.replace(" ", "");
-                    Chip entryChip2 = getChip(entryChipGroup, text);
-                    entryChipGroup.addView(entryChip2);
-                    editable.clear();
-                }
-                if(text.endsWith("\n")){
-                    text = text.replace("\n", "");
-                    Chip entryChip2 = getChip(entryChipGroup, text);
-                    entryChipGroup.addView(entryChip2);
-                    editable.clear();
-                }
-
-                text = editable.toString();
-                if(text.endsWith(" ")){
-                    String[] parts = editable.toString().split(" ");
-                    int lastpos = 0;
-                    for(String part : parts){
-                        ChipDrawable chip = ChipDrawable.createFromResource(ConfigurationActivity.this, R.xml.standalone_chip);
-                        chip.setText(part);
-                        chip.setBounds(0, 0, chip.getIntrinsicWidth(), chip.getIntrinsicHeight());
-                        //ImageSpan span = new ImageSpan(chip);
-                        editable.setSpan(chip, lastpos, lastpos + part.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        lastpos += part.length() + 1;
-                    }
-                }
-            }
-        });
-
-        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(this);
-        flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);
-        flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
-        flexboxLayoutManager.setAlignItems(AlignItems.STRETCH);
-
-        //RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        //recyclerView.setLayoutManager(flexboxLayoutManager);
-        //recyclerView.setAdapter(new ChipAdapter());
-
-        LinearLayout linearLayout = findViewById(R.id.linearChips);
-        //GridLayout linearLayout = findViewById(R.id.linearChips);
-        //TextInputLayout linearLayout = findViewById(R.id.textInputLayout);
-        //FlexboxLayout linearLayout = findViewById(R.id.linearChips);
-        TextInputEditText tiet = findViewById(R.id.textInputEditText);
-        //ChipGroup chipGroup = findViewById(R.id.chipGroup);
-        tiet.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String str = s.toString();
-                //if (trimmed.length() > 1 && trimmed.endsWith(",")) {
-                if (str.length() > 1 && (str.endsWith(" ") || str.endsWith("\n"))) {
-                    if(TextUtils.isEmpty(str.replace(" ", ""))){
-                        s.clear();
-                        return;
-                    }
-                    Chip chip = new Chip(ConfigurationActivity.this);
-                    String trimmed = str.trim();
-                    chip.setChipDrawable(ChipDrawable.createFromResource(ConfigurationActivity.this, R.xml.standalone_chip));
-                    chip.setText(trimmed.substring(0, trimmed.length()));
-                    chip.setCloseIconVisible(true);
-                    chip.setChipEndPadding(50);
-                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //chipGroup.removeView(chip);
-                            linearLayout.removeView(chip);
-                        }
-                    });
-                    chip.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Chip c = (Chip) v;
-                            s.clear();
-                            s.append(c.getText());
-                            linearLayout.removeView(c);
-                            //chipGroup.removeView(c);
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                        }
-                    });
-                    //chipGroup.addView(chip, chipGroup.getChildCount()-1);
-                    linearLayout.addView(chip, linearLayout.getChildCount()-1);
-                    s.clear();
-                }
-            }
-        });
-
-        tiet.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                /*
-                if (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                    if (tiet.length() == 0 && chipGroup.getChildCount() > 0) {
-                        Chip chip = (Chip) chipGroup.getChildAt(chipGroup.getChildCount() - 1);
-                        chipGroup.removeView(chip);
-                    }
-                }*/
-
-                if (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                    if (tiet.length() == 0 && linearLayout.getChildCount() > 0) {
-                        Chip chip = (Chip) linearLayout.getChildAt(linearLayout.getChildCount() - 2);
-                        linearLayout.removeView(chip);
-                    }
-                }
-                return false;
-            }
-        });
-
-        vChip = findViewById(R.id.vChip);
-        vChip.addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL);
-        boolean moveChipToEnd = false;
-        boolean chipifyUnterminatedTokens = true;
-        vChip.enableEditChipOnTouch(moveChipToEnd, chipifyUnterminatedTokens);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         vianderViewModel = new ViewModelProvider(this, new VianderFactory(getApplication())).get(VianderViewModel.class);
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         username = sharedPreferences.getString(USERNAME_KEY, null);
         token = sharedPreferences.getString(TOKEN_KEY, null);
+
+        et = findViewById(R.id.recipient_input_ET);
+        chipGroup = findViewById(R.id.recipient_group_FL);
 
         chCeliac = findViewById(R.id.checkboxCeliac);
         chDiabetic = findViewById(R.id.checkboxDiabetic);
@@ -263,7 +112,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 if(chVegan.isChecked()){
                     containList.add(Pair.create(true, getString(R.string.vegan)));
                 }
-                for(String value : vChip.getChipValues()){
+                for(String value : getChipValues()){
                     containList.add(Pair.create(false, value));
                 }
                 List<Integer> weekDays = new ArrayList<>();
@@ -299,7 +148,6 @@ public class ConfigurationActivity extends AppCompatActivity {
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vChip.setText("");
                 chCeliac.setChecked(false);
                 chDiabetic.setChecked(false);
                 chVegan.setChecked(false);
@@ -310,7 +158,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 chThursday.setChecked(false);
                 chFriday.setChecked(false);
                 chSaturday.setChecked(false);
-                vChip.setTextWithChips(new ArrayList<>());
+                removeChips();
             }
         });
 
@@ -330,11 +178,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                             chVegan.setChecked(true);
                         }else{
                             String word = filter.replace("!", "");
-                            ChipInfo ci = new ChipInfo(word, word);
-                            chipList.add(ci);
+                            addNewChip(word, chipGroup);
                         }
                     }
-                    vChip.setTextWithChips(chipList);
                 }
                 String weekDaysStr = userDto.getProfile().getWeekDays();
                 if(!StringUtils.isEmpty(weekDaysStr)){
@@ -369,58 +215,126 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        // load autocomplete
-        FlexboxLayout tagsChipGroup = findViewById(R.id.tagsChipGroup);
-        AutoCompleteTextView editTextDrop = findViewById(R.id.tagsAutoCompleteTextView);
-        String[] allTags = {"Love", "Passion", "Peace", "Hello", "Test"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, allTags);
-        editTextDrop.setAdapter(adapter);
+        // --------------------
+        // Start Chip functions
+        // --------------------
+        chipGroup.setFlexWrap(FlexWrap.WRAP);
+        chipGroup.setShowDivider(FlexboxLayout.SHOW_DIVIDER_MIDDLE);
+        chipGroup.setAlignItems(AlignItems.CENTER);
+        chipGroup.setJustifyContent(JustifyContent.SPACE_AROUND);
+        chipGroup.setAlignContent(AlignContent.STRETCH);
 
-        String[] tags = {"Hello", "This Is A Big World", "Test Multiple Row"};
-
-        for (String name : tags) {
-            LayoutInflater inflater = LayoutInflater.from(this);
-            Chip chip = (Chip) inflater.inflate(R.layout.view_chip,  null);
-            chip.setText(name);
-            chip.setCloseIconVisible(true);
-            chip.setClickable(true);
-            chip.setCheckable(false);
-            tagsChipGroup.addView(chip);
-        }
-
-         */
-
-    }
-
-    private Chip getChip(final ChipGroup entryChipGroup, String text) {
-        final Chip chip = new Chip(this);
-        chip.setChipDrawable(ChipDrawable.createFromResource(this, R.xml.standalone_chip));
-        int paddingDp = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 10,
-                getResources().getDisplayMetrics()
-        );
-        chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
-        chip.setText(text);
-        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-                entryChipGroup.removeView(chip);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                String str = v.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (str.length() > 1) {
+                        addNewChip(str, chipGroup);
+                        et.setText("");
+                    }
+                }
+                return false;
             }
         });
-        return chip;
+
+        et.setOnClickListener(v -> {
+            if(controlChipLimit(chipGroup, CHIP_LIMIT)){
+                et.setText("");
+            }
+        });
+
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString();
+                if(TextUtils.isEmpty(str.trim())){
+                    s.clear();
+                    return;
+                }
+                if(controlChipLimit(chipGroup, CHIP_LIMIT)){
+                    s.clear();
+                }
+                if (str.length() > 1 && (str.endsWith(" ") || str.endsWith("\n"))) {
+                    addNewChip(str, chipGroup);
+                    s.clear();
+                    controlChipLimit(chipGroup, CHIP_LIMIT);
+
+                }
+            }
+        });
+
+        et.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                    if (et.length() == 0 && chipGroup.getChildCount() > 0) {
+                        Chip chip = (Chip) chipGroup.getChildAt(chipGroup.getChildCount() - 2);
+                        chipGroup.removeView(chip);
+                    }
+                }
+                return false;
+            }
+        });
+        // ------------------
+        // End Chip functions
+        // ------------------
+
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
-            //View view = getCurrentFocus().getTouchables().get(0);
-            //if(!(view instanceof Chip)){
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            //}
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    private boolean controlChipLimit(FlexboxLayout chipGroup, int chipLimit){
+        if(chipGroup.getChildCount() - 1 >= chipLimit){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            Snackbar.make(findViewById(R.id.recipient_input_ET), "Ha alcanzado el máximo de elementos", Snackbar.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
+
+    private void addNewChip(String text, FlexboxLayout chipGroup) {
+        Chip chip = new Chip(ConfigurationActivity.this);
+        chip.setText(text);
+        chip.setChipIcon(ChipDrawable.createFromResource(ConfigurationActivity.this, R.xml.standalone_chip));
+        chip.setCloseIconVisible(true);
+        chipGroup.addView(chip, chipGroup.getChildCount() - 1);
+        chip.setOnCloseIconClickListener(v -> chipGroup.removeView(chip));
+    }
+
+    private List<String> getChipValues(){
+        List<String> values = new ArrayList<>();
+        int childCount = chipGroup.getChildCount();
+        for(int i=0; i<childCount; i++){
+            View view = chipGroup.getChildAt(i);
+            if(view instanceof Chip){
+                Chip chip = (Chip) view;
+                values.add(chip.getText().toString());
+            }
+        }
+        return values;
+    }
+
+    private void removeChips(){
+        int childCount = chipGroup.getChildCount();
+        while(childCount > 1){
+            chipGroup.removeViewAt(0);
+            childCount = chipGroup.getChildCount();
+        }
     }
 
 }
