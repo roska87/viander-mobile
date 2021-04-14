@@ -63,7 +63,6 @@ public class ConfigurationActivity extends AppCompatActivity {
     private CheckBox chSunday, chMonday, chTuesday, chWednesday, chThursday, chFriday, chSaturday;
 
     private VianderViewModel vianderViewModel;
-    private TextInputEditText editText;
 
     // chip elements
     private EditText et;
