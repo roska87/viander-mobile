@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.appcompat.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:elevation="@dimen/elevation_bar"
+    android:id="@+id/actionbar"
     android:padding="12dp"
-    android:gravity="center_horizontal"
-    android:background="#292828">
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     <ImageView
+        android:id="@+id/burgerMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="ClickMenu"
+        android:onClick="clickMenu"
+        android:layout_gravity="start"
         android:src="@drawable/ic_menu"/>
 
     <TextView
-        android:layout_width="0dp"
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Viander"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:text="@string/app_name"
         android:textColor="#fff"
-        android:gravity="center_horizontal" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:src="@drawable/ic_more"/>
 
-
-</LinearLayout>
+</androidx.appcompat.widget.Toolbar>

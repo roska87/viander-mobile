@@ -38,9 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     private SharedPreferences sharedpreferences;
     private String email, username, token;
 
-
     // variable for DrawerLayout
-
     DrawerLayout drawerLayout;
 
     @Override
@@ -101,13 +99,15 @@ public class HomeActivity extends AppCompatActivity {
 
         // initializing our textview and button.
         TextView welcomeTV = findViewById(R.id.idTVWelcome);
-        welcomeTV.setText(StringUtils.join(getString(R.string.welcome), " ", email));
+        welcomeTV.setText(StringUtils.join(getString(R.string.welcome)));
 
+        TextView user = findViewById(R.id.emailHome);
+        user.setText(email);
 
 
     }
 
-    public void ClickMenu(View view){
+    public void clickMenu(View view){
         openDrawer(drawerLayout);
     }
 
@@ -115,37 +115,36 @@ public class HomeActivity extends AppCompatActivity {
         drawerLayout.openDrawer(GravityCompat.START);
     }
 
-    public void ClickLogo(View view){
+    public void clickLogo(View view){
         closeDrawer(drawerLayout);
     }
 
     private static void closeDrawer(DrawerLayout drawerLayout){
-        if(drawerLayout.isDrawerOpen(GravityCompat.START))
-        {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
         }
     }
 
-    public void ClickViandas(View view){
-        redirectActivity(this, ViandasActivity.class);
+    public void clickViandas(View view){
+        Intent i = new Intent(HomeActivity.this, ConfigurationActivity.class);
+        startActivity(i);
     }
 
-    public void ClickConfig(View view){
-        redirectActivity(this, ConfigurationActivity.class);
-
+    public void clickConfig(View view){
+        Intent i = new Intent(HomeActivity.this, ConfigurationActivity.class);
+        startActivityForResult(i, LAUNCH_CONFIGURATION_ACTIVITY);
     }
 
-    public void ClickLogout(View view){
-
+    public void clickLogout(View view){
         logout(this);
     }
 
     private void logout(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Salir");
-        builder.setMessage("¿Seguro que desea cerrar sesión?");
+        builder.setTitle(getString(R.string.logout));
+        builder.setMessage(getString(R.string.logout_question));
 
-        builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sessionViewModel.delete();
@@ -174,20 +173,13 @@ public class HomeActivity extends AppCompatActivity {
                 finish();
             }
         });
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
         builder.show();
-    }
-
-    private void redirectActivity(Activity activity, Class aClass) {
-        Intent intent = new Intent(activity, aClass);
-
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
     }
 
     @Override
