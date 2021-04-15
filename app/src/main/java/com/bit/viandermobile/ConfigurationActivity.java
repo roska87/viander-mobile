@@ -1,5 +1,6 @@
 package com.bit.viandermobile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,8 +18,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,11 +31,11 @@ import com.google.android.flexbox.AlignContent;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 import com.hootsuite.nachos.chip.ChipInfo;
 
 import org.apache.commons.lang3.StringUtils;
@@ -63,7 +62,6 @@ public class ConfigurationActivity extends AppCompatActivity {
     private CheckBox chSunday, chMonday, chTuesday, chWednesday, chThursday, chFriday, chSaturday;
 
     private VianderViewModel vianderViewModel;
-    private TextInputEditText editText;
 
     // chip elements
     private EditText et;
@@ -138,9 +136,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                     weekDays.add(SATURDAY);
                 }
                 vianderViewModel.updateProfile(token, username, containList, weekDays);
-                Toast.makeText(ConfigurationActivity.this, R.string.configuration_updated, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ConfigurationActivity.this, HomeActivity.class);
-                startActivity(intent);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
         });
 
@@ -301,7 +299,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         if(chipGroup.getChildCount() - 1 >= chipLimit){
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            Snackbar.make(findViewById(R.id.recipient_input_ET), "Ha alcanzado el máximo de elementos", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.recipient_input_ET), getString(R.string.chips_max_count), Snackbar.LENGTH_LONG).show();
             return true;
         }
         return false;

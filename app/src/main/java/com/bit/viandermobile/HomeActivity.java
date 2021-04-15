@@ -1,5 +1,6 @@
 package com.bit.viandermobile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,11 +17,15 @@ import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.google.android.material.snackbar.Snackbar;
+
 import org.apache.commons.lang3.StringUtils;
 import static  com.bit.viandermobile.constants.Constants.*;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private static final int LAUNCH_CONFIGURATION_ACTIVITY = 1;
 
     private VianderViewModel vianderViewModel;
     private SessionViewModel sessionViewModel;
@@ -66,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HomeActivity.this, ConfigurationActivity.class);
-                startActivity(i);
+                startActivityForResult(i, LAUNCH_CONFIGURATION_ACTIVITY);
             }
         });
 
@@ -118,6 +123,19 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LAUNCH_CONFIGURATION_ACTIVITY) {
+            if(resultCode == Activity.RESULT_OK){
+                Snackbar.make(findViewById(R.id.activityHome), getString(R.string.configuration_updated), Snackbar.LENGTH_LONG).show();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
 }
