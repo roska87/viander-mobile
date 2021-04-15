@@ -1,5 +1,6 @@
 package com.bit.viandermobile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,8 +18,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +31,7 @@ import com.google.android.flexbox.AlignContent;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
@@ -136,9 +136,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                     weekDays.add(SATURDAY);
                 }
                 vianderViewModel.updateProfile(token, username, containList, weekDays);
-                Toast.makeText(ConfigurationActivity.this, R.string.configuration_updated, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ConfigurationActivity.this, HomeActivity.class);
-                startActivity(intent);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
         });
 
