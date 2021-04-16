@@ -36,7 +36,7 @@
     <string name="request_state">Estado del pedido</string>
     <string name="request_confirm">Su pedido ha sido confirmado</string>
 
-
+    <string name="enter">Ingresar</string>
     <string name="categories">Categorías</string>
     <string name="celiac">Celíaco</string>
     <string name="diabetic">Diabético</string>
