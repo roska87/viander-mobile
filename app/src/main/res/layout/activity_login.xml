@@ -39,9 +39,11 @@
         android:inputType="textEmailAddress"
         android:textColorHint="#ffffff"
         android:textColorLink="#ffffff">
+
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#fff" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -59,10 +61,12 @@
         android:textColorHint="#ffffff"
         android:textColorLink="#000000"
         app:endIconMode="password_toggle">
+
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:textColor="#fff" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout

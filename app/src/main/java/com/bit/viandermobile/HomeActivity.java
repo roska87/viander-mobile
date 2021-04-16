@@ -76,26 +76,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        Button configurationBtn = findViewById(R.id.idBtnConfiguration);
-        configurationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, ConfigurationActivity.class);
-                startActivityForResult(i, LAUNCH_CONFIGURATION_ACTIVITY);
-            }
-        });
-
-        Button confirmationBtn = findViewById(R.id.idBtnConfirmation);
-        confirmationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, ConfirmationActivity.class);
-                i.putExtra(TOTAL_AMOUNT, 123);
-                startActivity(i);
-                finish();
-            }
-        });
-
 
         // initializing our textview and button.
         TextView welcomeTV = findViewById(R.id.idTVWelcome);
