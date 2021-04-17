@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
-        android:gravity="top"
+        android:gravity="center_horizontal|top"
         android:orientation="vertical">
 
         <include
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:baselineAligned="false"
-        android:gravity="center_horizontal|fill_horizontal|center_vertical"
+        android:gravity="center|center_horizontal|fill_horizontal|center_vertical"
         android:orientation="horizontal">
 
         <androidx.viewpager2.widget.ViewPager2
