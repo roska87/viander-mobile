@@ -23,7 +23,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp">
-            
+
+            <com.hootsuite.nachos.NachoTextView
+                android:id="@+id/vChip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="10dp"
+                android:background="#39F0F0F0"
+                android:hint="@string/chip"
+                android:padding="10dp"
+                android:paddingStart="20dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingRight="10dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                app:chipBackground="#F38C35"
+                app:chipHeight="30dp"
+                app:chipTextColor="#fff"
+                app:chipTextSize="16dp"
+                app:chipVerticalSpacing="3dp" />
+
             <TextView
                 android:id="@+id/textViewAvoid"
                 android:layout_width="wrap_content"

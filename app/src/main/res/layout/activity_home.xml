@@ -39,17 +39,9 @@
             android:gravity="center_horizontal"
             android:padding="5dp"
             android:textAlignment="center"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:gravity="center_horizontal"/>
 
-        <Button
-            android:id="@+id/idBtnConfiguration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/idPost"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/configuration" />
 
         <Button
             android:id="@+id/idBtnConfirmation"
