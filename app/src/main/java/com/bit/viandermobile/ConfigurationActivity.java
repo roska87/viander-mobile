@@ -23,16 +23,19 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.factories.VianderFactory;
+import com.bit.viandermobile.models.CheckboxViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
 import com.google.android.flexbox.AlignContent;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
-import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,16 +43,10 @@ import com.hootsuite.nachos.chip.ChipInfo;
 
 import org.apache.commons.lang3.StringUtils;
 
-import static com.bit.viandermobile.constants.Constants.FRIDAY;
-import static com.bit.viandermobile.constants.Constants.MONDAY;
-import static com.bit.viandermobile.constants.Constants.SATURDAY;
 import static com.bit.viandermobile.constants.Constants.SHARED_PREFS;
-import static com.bit.viandermobile.constants.Constants.SUNDAY;
-import static com.bit.viandermobile.constants.Constants.THURSDAY;
+import static com.bit.viandermobile.constants.Constants.*;
 import static com.bit.viandermobile.constants.Constants.TOKEN_KEY;
-import static com.bit.viandermobile.constants.Constants.TUESDAY;
 import static com.bit.viandermobile.constants.Constants.USERNAME_KEY;
-import static com.bit.viandermobile.constants.Constants.WEDNESDAY;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
@@ -58,14 +55,13 @@ public class ConfigurationActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private String username, token;
 
-    private CheckBox chCeliac, chDiabetic, chVegan;
-    private CheckBox chSunday, chMonday, chTuesday, chWednesday, chThursday, chFriday, chSaturday;
-
     private VianderViewModel vianderViewModel;
 
     // chip elements
     private EditText et;
     private FlexboxLayout chipGroup;
+
+    private RecyclerView categoryLstView, weekLstView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +79,13 @@ public class ConfigurationActivity extends AppCompatActivity {
         et = findViewById(R.id.recipient_input_ET);
         chipGroup = findViewById(R.id.recipient_group_FL);
 
-        chCeliac = findViewById(R.id.checkboxCeliac);
-        chDiabetic = findViewById(R.id.checkboxDiabetic);
-        chVegan = findViewById(R.id.checkboxVegan);
-        chSunday = findViewById(R.id.checkboxSunday);
-        chMonday = findViewById(R.id.checkboxMonday);
-        chTuesday = findViewById(R.id.checkboxTuesday);
-        chWednesday = findViewById(R.id.checkboxWednesday);
-        chThursday = findViewById(R.id.checkboxThursday);
-        chFriday = findViewById(R.id.checkboxFriday);
-        chSaturday = findViewById(R.id.checkboxSaturday);
+        // Categories RecyclerView
+        categoryLstView = (RecyclerView) findViewById(R.id.category_lst);
+        initializeCategories(null);
+
+        // Week RecyclerView
+        weekLstView = (RecyclerView) findViewById(R.id.week_lst);
+        initializeWeek(null);
 
         Button btnConfirm = findViewById(R.id.btnConfirm);
         Button btnReset = findViewById(R.id.btnReset);
@@ -107,39 +100,21 @@ public class ConfigurationActivity extends AppCompatActivity {
             @Override
             public void onClick(View V) {
                 List<Pair<Boolean, String>> containList = new ArrayList<>();
-                if(chCeliac.isChecked()){
-                    containList.add(Pair.create(true, getString(R.string.celiac)));
-                }
-                if(chDiabetic.isChecked()){
-                    containList.add(Pair.create(true, getString(R.string.diabetic)));
-                }
-                if(chVegan.isChecked()){
-                    containList.add(Pair.create(true, getString(R.string.vegan)));
+                for(int i=0; i<categoryLstView.getAdapter().getItemCount(); i++){
+                    Pair<Boolean, String> categoryPair = CheckBoxListAdapter.getModelValues(categoryLstView, i);
+                    if(categoryPair.first){
+                        containList.add(Pair.create(true, categoryPair.second));
+                    }
                 }
                 for(String value : getChipValues()){
-                    containList.add(Pair.create(false, value));
+                    containList.add(Pair.create(false, value.trim()));
                 }
                 List<Integer> weekDays = new ArrayList<>();
-                if(chSunday.isChecked()){
-                    weekDays.add(SUNDAY);
-                }
-                if(chMonday.isChecked()){
-                    weekDays.add(MONDAY);
-                }
-                if(chTuesday.isChecked()){
-                    weekDays.add(TUESDAY);
-                }
-                if(chWednesday.isChecked()){
-                    weekDays.add(WEDNESDAY);
-                }
-                if(chThursday.isChecked()){
-                    weekDays.add(THURSDAY);
-                }
-                if(chFriday.isChecked()){
-                    weekDays.add(FRIDAY);
-                }
-                if(chSaturday.isChecked()){
-                    weekDays.add(SATURDAY);
+                for(int i=0; i<weekLstView.getAdapter().getItemCount(); i++){
+                    Pair<Boolean, String> categoryPair = CheckBoxListAdapter.getModelValues(weekLstView, i);
+                    if(categoryPair.first){
+                        weekDays.add(i);
+                    }
                 }
                 vianderViewModel.updateProfile(token, username, containList, weekDays);
                 Intent intent = new Intent(ConfigurationActivity.this, HomeActivity.class);
@@ -152,16 +127,8 @@ public class ConfigurationActivity extends AppCompatActivity {
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chCeliac.setChecked(false);
-                chDiabetic.setChecked(false);
-                chVegan.setChecked(false);
-                chSunday.setChecked(false);
-                chMonday.setChecked(false);
-                chTuesday.setChecked(false);
-                chWednesday.setChecked(false);
-                chThursday.setChecked(false);
-                chFriday.setChecked(false);
-                chSaturday.setChecked(false);
+                initializeCategories(null);
+                initializeWeek(null);
                 removeChips();
             }
         });
@@ -171,51 +138,55 @@ public class ConfigurationActivity extends AppCompatActivity {
             public void onChanged(UserDto userDto) {
                 String filterStr = userDto.getProfile().getFilters();
                 if(!StringUtils.isEmpty(filterStr)){
+                    removeChips();
                     String[] filters = filterStr.split(",");
-                    List<ChipInfo> chipList = new ArrayList<>();
+                    List<Integer> positiveCategories = new ArrayList<>();
                     for(String filter : filters){
                         if(filter.equals(getString(R.string.celiac))){
-                            chCeliac.setChecked(true);
+                            positiveCategories.add(0);
                         }else if(filter.equals(getString(R.string.diabetic))){
-                            chDiabetic.setChecked(true);
+                            positiveCategories.add(1);
                         }else if(filter.equals(getString(R.string.vegan))){
-                            chVegan.setChecked(true);
+                            positiveCategories.add(2);
                         }else{
                             String word = filter.replace("!", "");
                             addNewChip(word, chipGroup);
                         }
                     }
+                    initializeCategories(positiveCategories);
                     manageChipEditText();
                 }
                 String weekDaysStr = userDto.getProfile().getWeekDays();
                 if(!StringUtils.isEmpty(weekDaysStr)){
                     String[] weekDays = weekDaysStr.split(",");
+                    List<Integer> positiveDays = new ArrayList<>();
                     for(String weekDay : weekDays){
                         int weekDayInt = Integer.parseInt(weekDay);
                         switch(weekDayInt){ 
                             case SUNDAY:
-                                chSunday.setChecked(true);
+                                positiveDays.add(SUNDAY);
                                 break;
                             case MONDAY:
-                                chMonday.setChecked(true);
+                                positiveDays.add(MONDAY);
                                 break;
                             case TUESDAY:
-                                chTuesday.setChecked(true);
+                                positiveDays.add(TUESDAY);
                                 break;
                             case WEDNESDAY:
-                                chWednesday.setChecked(true);
+                                positiveDays.add(WEDNESDAY);
                                 break;
                             case THURSDAY:
-                                chThursday.setChecked(true);
+                                positiveDays.add(THURSDAY);
                                 break;
                             case FRIDAY:
-                                chFriday.setChecked(true);
+                                positiveDays.add(FRIDAY);
                                 break;
                             case SATURDAY:
-                                chSaturday.setChecked(true);
+                                positiveDays.add(SATURDAY);
                                 break;
                         }
                     }
+                    initializeWeek(positiveDays);
                 }
             }
         });
@@ -295,6 +266,60 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // TODO guardar estados
+        //savedInstanceState.putBoolean("MyBoolean", true);
+        //savedInstanceState.putDouble("myDouble", 1.9);
+        //savedInstanceState.putInt("MyInt", 1);
+        //savedInstanceState.putString("MyString", "Welcome back to Android");
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // TODO restaurar estados
+        //boolean myBoolean = savedInstanceState.getBoolean("MyBoolean");
+        //double myDouble = savedInstanceState.getDouble("myDouble");
+        //int myInt = savedInstanceState.getInt("MyInt");
+        //String myString = savedInstanceState.getString("MyString");
+    }
+
+    private void initializeCategories(List<Integer> positivePositions){
+        List<CheckboxViewModel> checkboxViewModels = new ArrayList<>();
+        checkboxViewModels.add(new CheckboxViewModel(getString(R.string.celiac), false));
+        checkboxViewModels.add(new CheckboxViewModel(getString(R.string.diabetic), false));
+        checkboxViewModels.add(new CheckboxViewModel(getString(R.string.vegan), false));
+        if(!CollectionUtils.isEmpty(positivePositions)){
+            for(Integer position : positivePositions) {
+                checkboxViewModels.get(position).setChecked(true);
+            }
+        }
+        CheckBoxListAdapter catLstAdapter = new CheckBoxListAdapter(checkboxViewModels, this);
+        categoryLstView.setAdapter(catLstAdapter);
+        categoryLstView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void initializeWeek(List<Integer> positivePositions){
+        List<CheckboxViewModel> checkboxWeekViewModels = new ArrayList<>();
+        checkboxWeekViewModels.add(new CheckboxViewModel(getString(R.string.monday), false));
+        checkboxWeekViewModels.add(new CheckboxViewModel(getString(R.string.tuesday), false));
+        checkboxWeekViewModels.add(new CheckboxViewModel(getString(R.string.wednesday), false));
+        checkboxWeekViewModels.add(new CheckboxViewModel(getString(R.string.thursday), false));
+        checkboxWeekViewModels.add(new CheckboxViewModel(getString(R.string.friday), false));
+        checkboxWeekViewModels.add(new CheckboxViewModel(getString(R.string.saturday), false));
+        checkboxWeekViewModels.add(new CheckboxViewModel(getString(R.string.sunday), false));
+        if(!CollectionUtils.isEmpty(positivePositions)){
+            for(Integer position : positivePositions) {
+                checkboxWeekViewModels.get(position).setChecked(true);
+            }
+        }
+        CheckBoxListAdapter weekLstAdapter = new CheckBoxListAdapter(checkboxWeekViewModels, this);
+        weekLstView.setAdapter(weekLstAdapter);
+        weekLstView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
     private void manageChipEditText(){
         if(chipGroup.getChildCount() > 1){
             et.setHint("");
@@ -333,7 +358,10 @@ public class ConfigurationActivity extends AppCompatActivity {
         chip.setChipIcon(ChipDrawable.createFromResource(ConfigurationActivity.this, R.xml.standalone_chip));
         chip.setCloseIconVisible(true);
         chipGroup.addView(chip, chipGroup.getChildCount() - 1);
-        chip.setOnCloseIconClickListener(v -> chipGroup.removeView(chip));
+        chip.setOnCloseIconClickListener(v -> {
+            chipGroup.removeView(chip);
+            manageChipEditText();
+        });
     }
 
     private List<String> getChipValues(){

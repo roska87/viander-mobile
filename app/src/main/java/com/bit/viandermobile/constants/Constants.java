@@ -10,12 +10,12 @@ public interface Constants {
     String TOTAL_AMOUNT = "totalAmount";
 
     // Days of week
-    int SUNDAY = 0;
-    int MONDAY = 1;
-    int TUESDAY = 2;
-    int WEDNESDAY = 3;
-    int THURSDAY = 4;
-    int FRIDAY = 5;
-    int SATURDAY = 6;
+    int MONDAY = 0;
+    int TUESDAY = 1;
+    int WEDNESDAY = 2;
+    int THURSDAY = 3;
+    int FRIDAY = 4;
+    int SATURDAY = 5;
+    int SUNDAY = 6;
 
 }
