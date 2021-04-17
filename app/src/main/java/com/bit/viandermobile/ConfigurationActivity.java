@@ -97,12 +97,6 @@ public class ConfigurationActivity extends AppCompatActivity {
         Button btnConfirm = findViewById(R.id.btnConfirm);
         Button btnReset = findViewById(R.id.btnReset);
 
-        TextView textViewAvoid = findViewById(R.id.textViewAvoid);
-        textViewAvoid.setOnClickListener(c -> {
-            et.requestFocus();
-            showKeyoard();
-        });
-
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View V) {
@@ -185,7 +179,6 @@ public class ConfigurationActivity extends AppCompatActivity {
                             addNewChip(word, chipGroup);
                         }
                     }
-                    manageChipEditText();
                 }
                 String weekDaysStr = userDto.getProfile().getWeekDays();
                 if(!StringUtils.isEmpty(weekDaysStr)){
@@ -261,7 +254,6 @@ public class ConfigurationActivity extends AppCompatActivity {
                 String str = s.toString();
                 if(TextUtils.isEmpty(str.trim())){
                     s.clear();
-                    manageChipEditText();
                     return;
                 }
                 if(controlChipLimit(chipGroup, CHIP_LIMIT)){
@@ -271,8 +263,8 @@ public class ConfigurationActivity extends AppCompatActivity {
                     addNewChip(str, chipGroup);
                     s.clear();
                     controlChipLimit(chipGroup, CHIP_LIMIT);
+
                 }
-                manageChipEditText();
             }
         });
 
@@ -285,7 +277,6 @@ public class ConfigurationActivity extends AppCompatActivity {
                         chipGroup.removeView(chip);
                     }
                 }
-                manageChipEditText();
                 return false;
             }
         });
@@ -295,14 +286,6 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     }
 
-    private void manageChipEditText(){
-        if(chipGroup.getChildCount() > 1){
-            et.setHint("");
-        }else{
-            et.setHint(getString(R.string.enter));
-        }
-    }
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
@@ -310,11 +293,6 @@ public class ConfigurationActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
-    }
-
-    private void showKeyoard(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(getCurrentFocus(), 0);
     }
 
     private boolean controlChipLimit(FlexboxLayout chipGroup, int chipLimit){
