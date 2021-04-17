@@ -126,7 +126,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void clickViandas(View view){
-        Intent i = new Intent(HomeActivity.this, ViandasActivity.class);
+        Intent i = new Intent(HomeActivity.this, ConfigurationActivity.class);
         startActivity(i);
     }
 
