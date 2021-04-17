@@ -18,7 +18,7 @@ public class RestApiClient {
     public static Retrofit getClient(){
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.1.44:8080/")
+                    .baseUrl("http://10.0.1.101:8080/")
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create(new Gson()))
                     .build();
