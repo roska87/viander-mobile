@@ -42,12 +42,6 @@
                 android:textColor="@color/black"
                 android:textSize="24sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_below="@id/textViewAvoid"/>
-
             <!-- Start Linear layout for chips -->
             <LinearLayout
                 android:id="@+id/idLinearChips"
@@ -80,12 +74,11 @@
                         android:layout_height="32dp"
                         android:layout_marginStart="2dp"
                         android:layout_marginLeft="2dp"
+                        app:layout_flexGrow="1"
                         android:background="@android:color/transparent"
-                        android:hint="Ingresar"
                         android:imeOptions="actionDone"
                         android:inputType="text"
-                        android:textColorLink="#FFFFFF"
-                        app:layout_flexGrow="1" />
+                        android:hint="Ingresar"/>
 
                 </com.google.android.flexbox.FlexboxLayout>
 
@@ -110,12 +103,6 @@
                 android:text="@string/categories"
                 android:textColor="@color/black"
                 android:textSize="24sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_below="@id/textViewCategories"/>
 
             <CheckBox
                 android:id="@+id/checkboxCeliac"
@@ -185,12 +172,6 @@
                 android:text="@string/weekly_days"
                 android:textColor="@color/black"
                 android:textSize="24sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_below="@id/textViewWeek"/>
 
             <CheckBox
                 android:id="@+id/checkboxSunday"
