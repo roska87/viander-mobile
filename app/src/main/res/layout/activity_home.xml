@@ -27,7 +27,6 @@
             android:layout_marginTop="16dp"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:textColor="@color/black"
             android:textAlignment="center"
             android:textSize="20sp" />
 
@@ -39,7 +38,6 @@
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:textColor="@color/black"
             android:textAlignment="center"
             android:textSize="20sp"/>
 
@@ -51,8 +49,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/configuration"
-            app:backgroundTint="@color/common_background" />
+            android:text="@string/configuration" />
 
         <Button
             android:id="@+id/idBtnConfirmation"

@@ -19,33 +19,27 @@
 
         <activity
             android:name=".ViandasActivity"
-            android:label="@string/viands_recommendation"
-            android:parentActivityName=".HomeActivity"/>
-
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ConfigurationActivity"
             android:label="@string/configuration"
-            android:parentActivityName=".HomeActivity"/>
-
-        <activity android:name=".ConfirmationActivity"
-            android:label="@string/confirmation"/>
-
+            android:parentActivityName=".HomeActivity"></activity>
+        <activity android:name=".ConfirmationActivity" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
         <activity android:name=".HomeActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

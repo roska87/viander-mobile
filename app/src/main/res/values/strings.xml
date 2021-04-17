@@ -4,13 +4,8 @@
     <string name="enter_password">Contraseña</string>
     <string name="enter_your_username">Usuario</string>
     <string name="confirmation">Confirmación</string>
-    <string name="configuration">Configuración</string>
-    <string name="viands_recommendation">Recomendación de Viandas"</string>
+    <string name="configuration">configuración</string>
     <string name="logout">Salir</string>
-    <string name="logout_question">¿Seguro que desea cerrar sesión?</string>
-    <string name="yes">SI</string>
-    <string name="no">NO</string>
-    <string name="user">Usuario:</string>
 
     <string name="logo">Logo Viander</string>
     <string name="google_login">INGRESAR CON GOOGLE</string>
