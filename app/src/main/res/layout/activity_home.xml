@@ -9,63 +9,62 @@
     tools:context=".HomeActivity"
     tools:openDrawer="start">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        android:fillViewport="true">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:gravity="center_horizontal|top"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/main_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/profile_example"
+                app:civ_border_color="#000000"
+                app:civ_border_width="3dp" />
+
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerImageSlider"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center|center_horizontal|fill_horizontal|center_vertical"
+                android:paddingStart="50dp"
+                android:paddingEnd="50dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:gravity="center_horizontal|top"
-        android:orientation="vertical">
-
-        <include
-            layout="@layout/main_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="150dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:contentDescription="@string/content_description"
-            android:src="@drawable/profile_example"
-            app:civ_border_color="#000000"
-            app:civ_border_width="3dp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:baselineAligned="false"
-        android:gravity="center|center_horizontal|fill_horizontal|center_vertical"
-        android:orientation="horizontal">
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPagerImageSlider"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_gravity="center|center_horizontal|fill_horizontal|center_vertical" />
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom|center_horizontal|fill_horizontal"
-        android:orientation="vertical">
+        android:gravity="bottom">
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:gravity="center|center_horizontal|center_vertical"
+            android:layout_gravity="bottom|clip_horizontal|fill_horizontal"
+            android:gravity="center_horizontal"
             android:onClick="clickViandas"
             android:text="@string/viands_recommendation"
             app:backgroundTint="@color/common_background" />
+
     </LinearLayout>
 
     <RelativeLayout
