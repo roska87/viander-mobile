@@ -60,6 +60,10 @@ public class VianderViewModel extends AndroidViewModel {
         return menu;
     }
 
+    public void getMenu(String token, String username){
+        vianderRepository.getRandomPosts(token, username);
+    }
+
     public void changeViand(String token, List<Integer> viandPositions){
         vianderRepository.changePost(token, viandPositions);
     }

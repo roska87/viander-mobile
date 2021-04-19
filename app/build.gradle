@@ -66,4 +66,7 @@ dependencies {
     implementation 'com.google.android:flexbox:2.0.1'
 
     implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.squareup.picasso:picasso:2.8'
+
 }

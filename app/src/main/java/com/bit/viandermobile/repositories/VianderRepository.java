@@ -16,6 +16,7 @@ import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.rest.RestApiClient;
 import com.bit.viandermobile.rest.RestApiInterface;
+import com.bit.viandermobile.utils.NumberUtil;
 import com.bit.viandermobile.utils.TokenUtil;
 import com.google.android.gms.common.util.CollectionUtils;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -175,24 +176,64 @@ public class VianderRepository {
         });
     }
 
-    public void getRandomPosts(String token, int limit){
-        PostRandomRequestDto postRandomRequestDto = getFilters();
-        apiService.getPostRandom(token, limit, postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
+    public void getRandomPosts(String token, String username){
+        apiService.getUserByUsername(token, username).enqueue(new Callback<List<UserDto>>() {
             @Override
-            public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
-                PostRandomDto randomDto = response.body();
-                Map<Integer, PostDto> map = new HashMap<>();
-                if(randomDto.getResults() != null && randomDto.getResults().size() > 0){
-                    for(int i = 0; i < randomDto.getResults().size(); i++){
-                        map.put(i+1, randomDto.getResults().get(i));
-                    }
+            public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
+                List<UserDto> body = response.body();
+                if(CollectionUtils.isEmpty(body)){
+                    String message = join(application.getApplicationContext().getString(R.string.error_get_user));
+                    Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                 }
-                randomPosts.setValue(map);
+                UserDto user = body.get(0);
+                loggedUser.setValue(user);
+                ProfileDto profile = user.getProfile();
+                Log.i("WeekDays", profile.getWeekDays());
+                String[] weekDaysArray = profile.getWeekDays().split(",");
+                int weekDays = weekDaysArray.length;
+                Log.i("WeekDaysCount", ""+weekDays);
+                PostRandomRequestDto postRandomRequestDto = parseFilters(profile.getFilters());
+                apiService.getPostRandom(token, weekDays, postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
+                    @Override
+                    public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
+                        PostRandomDto randomDto = response.body();
+                        Map<Integer, PostDto> map = new HashMap<>();
+                        if(randomDto.getResults() != null && randomDto.getResults().size() > 0){
+                            for(int i = 0; i < randomDto.getResults().size(); i++){
+                                map.put(Integer.parseInt(weekDaysArray[i]), randomDto.getResults().get(i));
+                            }
+                        }
+                        // start - fill empty days
+                        int mapSize = map.size();
+                        if(mapSize < weekDays){
+                            Object[] entryArray = map.keySet().toArray();
+                            int difference = weekDays - mapSize;
+                            int count = 0;
+                            while(count < difference){
+                                int number = NumberUtil.getRandomNumber(0, mapSize-1);
+                                Integer key = (Integer) entryArray[number];
+                                PostDto value = map.get(key);
+                                String weekDay = weekDaysArray[mapSize + count];
+                                map.put(Integer.parseInt(weekDay), value);
+                                count++;
+                            }
+                        }
+                        // end - fill empty days
+                        randomPosts.setValue(map);
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostRandomDto> call, Throwable t) {
+                        String message = join(application.getApplicationContext().getString(R.string.error_get_random_post), " ", t.getMessage());
+                        Log.e("Error", message);
+                        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Call<PostRandomDto> call, Throwable t) {
-                String message = join(application.getApplicationContext().getString(R.string.error_get_random_post), " ", t.getMessage());
+            public void onFailure(Call<List<UserDto>> call, Throwable t) {
+                String message = join(application.getApplicationContext().getString(R.string.error_get_user), " ", t.getMessage());
                 Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
@@ -217,6 +258,22 @@ public class VianderRepository {
                 Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private PostRandomRequestDto parseFilters(String filters){
+        List<String> contains = new ArrayList<>();
+        List<String> notContains = new ArrayList<>();
+        String[] filtersArray = filters.split(",");
+        for(String filter : filtersArray){
+            if(filter.startsWith("!")){
+                notContains.add(filter.replace("!", ""));
+            }else{
+                contains.add(filter);
+            }
+        }
+        String containsStr = join(contains, ",");
+        String notContainsStr = join(notContains, ",");
+        return new PostRandomRequestDto(containsStr, notContainsStr);
     }
 
     private PostRandomRequestDto getFilters(){

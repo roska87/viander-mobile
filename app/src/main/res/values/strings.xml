@@ -22,7 +22,7 @@
     <string name="invalid_credentials">Credenciales inválidas</string>
 
     <string name="confirmation_image">Pedido confirmado</string>
-    <string name="confirmation_title">Su compra fue realizada con éxito!</string>
+    <string name="confirmation_title">Su pedido fue realizado con éxito!</string>
     <string name="confirmation_mail_message">Se le enviará un correo electrónico con la confirmación.</string>
     <string name="confirmation_total_amount_message">El total a abonar es $</string>
     <string name="confirmation_thanks_message">Gracias por preferirnos!</string>
@@ -52,6 +52,7 @@
     <string name="saturday">Sabado</string>
 
     <string name="reset_btn">Limpiar</string>
+    <string name="change">Cambiar</string>
     <string name="confirm">Confirmar</string>
     <string name="chip">Excluye un ingrediente</string>
     <string name="configuration_updated">Configuración actualizada</string>
