@@ -79,4 +79,10 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
 
+    <string name="content_description">Content description</string>
+    
+    <string name="most_requested">Viandas Populares</string>
+    <string name="createdby">Creado por</string>
+    <string name="canelones_de_carne">Canelones de carne</string>
+
 </resources>
