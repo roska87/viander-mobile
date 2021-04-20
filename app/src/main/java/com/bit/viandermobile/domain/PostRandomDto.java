@@ -1,12 +1,14 @@
 package com.bit.viandermobile.domain;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostRandomDto {
 
     @SerializedName("results")
-    private List<PostDto> results;
+    private List<PostDto> results = new ArrayList<>();
 
     public PostRandomDto() {
     }
