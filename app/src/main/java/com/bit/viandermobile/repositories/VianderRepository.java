@@ -22,6 +22,7 @@ import com.google.android.gms.common.util.CollectionUtils;
 import static org.apache.commons.lang3.StringUtils.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
@@ -197,7 +198,7 @@ public class VianderRepository {
                     @Override
                     public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
                         PostRandomDto randomDto = response.body();
-                        Map<Integer, PostDto> map = new HashMap<>();
+                        Map<Integer, PostDto> map = new LinkedHashMap<>();
                         if(randomDto.getResults() != null && randomDto.getResults().size() > 0){
                             for(int i = 0; i < randomDto.getResults().size(); i++){
                                 map.put(Integer.parseInt(weekDaysArray[i]), randomDto.getResults().get(i));
@@ -239,25 +240,45 @@ public class VianderRepository {
         });
     }
 
-    public void changePost(String token, List<Integer> positions){
-        PostRandomRequestDto postRandomRequestDto = getFilters();
-        apiService.getPostRandom(token, positions.size(), postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
+    public void changePost(String token, String username, List<Integer> positions){
+        apiService.getUserByUsername(token, username).enqueue(new Callback<List<UserDto>>() {
             @Override
-            public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
-                PostRandomDto randomDto = response.body();
-                Map<Integer, PostDto> map = randomPosts.getValue();
-                for(int i = 0; i < positions.size(); i++){
-                    map.put(positions.get(i), randomDto.getResults().get(i));
+            public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
+                List<UserDto> body = response.body();
+                if(CollectionUtils.isEmpty(body)){
+                    String message = join(application.getApplicationContext().getString(R.string.error_get_user));
+                    Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                 }
-                randomPosts.setValue(map);
+                UserDto user = body.get(0);
+                loggedUser.setValue(user);
+                ProfileDto profile = user.getProfile();
+                PostRandomRequestDto postRandomRequestDto = parseFilters(profile.getFilters());
+                apiService.getPostRandom(token, positions.size(), postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
+                    @Override
+                    public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
+                        PostRandomDto randomDto = response.body();
+                        Map<Integer, PostDto> map = randomPosts.getValue();
+                        for(int i = 0; i < positions.size(); i++){
+                            map.put(positions.get(i), randomDto.getResults().get(i));
+                        }
+                        randomPosts.setValue(map);
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostRandomDto> call, Throwable t) {
+                        String message = join(application.getApplicationContext().getString(R.string.error_change_random_post), " ", t.getMessage());
+                        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Call<PostRandomDto> call, Throwable t) {
-                String message = join(application.getApplicationContext().getString(R.string.error_change_random_post), " ", t.getMessage());
+            public void onFailure(Call<List<UserDto>> call, Throwable t) {
+                String message = join(application.getApplicationContext().getString(R.string.error_get_user), " ", t.getMessage());
                 Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
     private PostRandomRequestDto parseFilters(String filters){

@@ -64,8 +64,8 @@ public class VianderViewModel extends AndroidViewModel {
         vianderRepository.getRandomPosts(token, username);
     }
 
-    public void changeViand(String token, List<Integer> viandPositions){
-        vianderRepository.changePost(token, viandPositions);
+    public void changeViand(String token, String username, List<Integer> viandPositions){
+        vianderRepository.changePost(token, username, viandPositions);
     }
 
     public void login(String username, String password){

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,19 +19,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.viandermobile.models.CheckboxViewModel;
 import com.bit.viandermobile.models.ViandMenuViewModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdapter.ViandMenuViewHolder> {
 
     private Context context;
     private List<ViandMenuViewModel> viandMenuViewModelList;
+    private List<Integer> selectedDayNumbers;
 
     public ViandMenuViewAdapter(List<ViandMenuViewModel> viandMenuViewModelList, Context context){
         this.context = context;
         this.viandMenuViewModelList = viandMenuViewModelList;
+        this.selectedDayNumbers = new ArrayList<>();
     }
 
     @NonNull
@@ -38,6 +45,15 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
     public ViandMenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.activity_viandas_row, parent, false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView title = (TextView) v.findViewById(R.id.viand_title);
+                Snackbar.make(parent.findViewById(R.id.viandsActivityRow), R.string.selected_viand, Snackbar.LENGTH_LONG)
+                        .setText(title.getText())
+                        .show();
+            }
+        });
         return new ViandMenuViewHolder(view);
     }
 
@@ -48,8 +64,23 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         holder.day.setText(viandMenuViewModel.getDay());
         holder.price.setText(""+viandMenuViewModel.getPrice());
         //new DownloadImageTask(holder.image).execute(viandMenuViewModel.getImage());
-        Picasso.get().load(viandMenuViewModel.getImage()).into(holder.image);
+        Picasso.get()
+                .load(viandMenuViewModel.getImage())
+                .resize(146, 86)
+                .centerCrop()
+                .into(holder.image);
         holder.check.setChecked(viandMenuViewModel.isChecked());
+        holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    selectedDayNumbers.add((Integer) position);
+                }else{
+                    selectedDayNumbers.remove((Integer) position);
+                }
+                Collections.sort(selectedDayNumbers);
+            }
+        });
     }
 
     @Override
@@ -73,6 +104,10 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             image = itemView.findViewById(R.id.viand_image);
             check = itemView.findViewById(R.id.checkBox);
         }
+    }
+
+    public List<Integer> getSelectedViands(){
+        return selectedDayNumbers;
     }
 
     public int getMenuPrice(){

@@ -32,6 +32,9 @@
     <string name="channel_name">viander_channel</string>
     <string name="channel_description">viander</string>
     <string name="channel_id">viander</string>
+    <string name="selected_viand">Vianda seleccionada</string>
+    <string name="price_coin_synbol">Precio: $</string>
+    <string name="menu_price_message">Total a pagar: $</string>
 
     <string name="request_state">Estado del pedido</string>
     <string name="request_confirm">Su pedido ha sido confirmado</string>
@@ -46,13 +49,15 @@
     <string name="sunday">Domingo</string>
     <string name="monday">Lunes</string>
     <string name="tuesday">Martes</string>
-    <string name="wednesday">Miercoles</string>
+    <string name="wednesday">Miércoles</string>
     <string name="thursday">Jueves</string>
     <string name="friday">Viernes</string>
-    <string name="saturday">Sabado</string>
+    <string name="saturday">Sábado</string>
 
     <string name="reset_btn">Limpiar</string>
     <string name="change">Cambiar</string>
+    <string name="not_selected_viands">No hay viandas seleccionadas</string>
+    <string name="updated_viands">Viandas actualizadas</string>
     <string name="confirm">Confirmar</string>
     <string name="chip">Excluye un ingrediente</string>
     <string name="configuration_updated">Configuración actualizada</string>

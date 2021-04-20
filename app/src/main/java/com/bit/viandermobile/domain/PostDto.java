@@ -14,16 +14,19 @@ public class PostDto {
     private String content;
     @SerializedName("type")
     private String type;
+    @SerializedName("price")
+    private Integer price;
 
     public PostDto() {
     }
 
-    public PostDto(int id, String title, String file, String content, String type) {
+    public PostDto(int id, String title, String file, String content, String type, Integer price) {
         this.id = id;
         this.title = title;
         this.file = file;
         this.content = content;
         this.type = type;
+        this.price = price;
     }
 
     public int getId() {
@@ -66,12 +69,21 @@ public class PostDto {
         this.type = type;
     }
 
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "PostDto{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", file='" + file + '\'' +
+                ", price='" + price + '\'' +
                 '}';
     }
 }

@@ -21,8 +21,11 @@ import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.ViandMenuViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.google.android.gms.common.util.CollectionUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +42,7 @@ public class ViandasActivity extends AppCompatActivity {
     private VianderViewModel vianderViewModel;
     private RecyclerView recyclerView;
     private ViandMenuViewAdapter adapter;
+    private TextView menuPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class ViandasActivity extends AppCompatActivity {
         token = sharedPreferences.getString(TOKEN_KEY, null);
         vianderViewModel.getMenu(token, username);
         recyclerView = findViewById(R.id.recyclerView);
+        menuPrice = findViewById(R.id.menu_price_amount);
 
         vianderViewModel.getMenu().observe(ViandasActivity.this, new Observer<Map<Integer, PostDto>>() {
             @Override
@@ -59,6 +64,21 @@ public class ViandasActivity extends AppCompatActivity {
                 adapter = new ViandMenuViewAdapter(menuList, ViandasActivity.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
+                menuPrice.setText(""+getTotalAmount(menuList));
+            }
+        });
+
+        Button changeBtn = findViewById(R.id.change_button);
+        changeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Integer> selectedList = adapter.getSelectedViands();
+                if(CollectionUtils.isEmpty(selectedList)){
+                    Snackbar.make(findViewById(R.id.change_button), getString(R.string.not_selected_viands), Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                vianderViewModel.changeViand(token, username, selectedList);
+                Snackbar.make(findViewById(R.id.change_button), getString(R.string.updated_viands), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -74,8 +94,16 @@ public class ViandasActivity extends AppCompatActivity {
         });
     }
 
+    private int getTotalAmount(List<ViandMenuViewModel> menuList){
+        int sum = 0;
+        for(ViandMenuViewModel model : menuList){
+            sum += model.getPrice();
+        }
+        return sum;
+    }
+
     private List<ViandMenuViewModel> mapViand(Map<Integer, PostDto> postMap){
-        List<ViandMenuViewModel> modelList = new ArrayList<>();
+        List<ViandMenuViewModel> modelList = new LinkedList<>();
         for(Map.Entry<Integer, PostDto> entry : postMap.entrySet()){
             int dayNumber = entry.getKey();
             PostDto postDto = entry.getValue();
@@ -83,7 +111,7 @@ public class ViandasActivity extends AppCompatActivity {
             model.setTitle(postDto.getTitle());
             model.setImage(postDto.getFile());
             model.setDay(mapDay(dayNumber));
-            model.setPrice(123);
+            model.setPrice(postDto.getPrice());
             model.setChecked(false);
             modelList.add(model);
         }
