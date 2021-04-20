@@ -12,6 +12,7 @@ import android.transition.Slide;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,15 +62,16 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         // Slider ViewPager
         viewPager2 = findViewById(R.id.viewPagerImageSlider);
         drawerLayout = findViewById(R.id.activityHome);
 
         List<SliderItem> sliderItems = new ArrayList<>();
-        sliderItems.add(new SliderItem(R.drawable.imagen1));
+        sliderItems.add(new SliderItem(R.drawable.banner1));
         sliderItems.add(new SliderItem(R.drawable.imagen2));
-        sliderItems.add(new SliderItem(R.drawable.imagen3));
-        sliderItems.add(new SliderItem(R.drawable.canelones_home_temporal));
+        sliderItems.add(new SliderItem(R.drawable.imagen4));
+        sliderItems.add(new SliderItem(R.drawable.imagen6));
 
         viewPager2.setAdapter(new SliderAdapter(sliderItems, viewPager2));
 
