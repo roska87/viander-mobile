@@ -6,11 +6,13 @@
     <string name="confirmation">Confirmación</string>
     <string name="configuration">Configuración</string>
     <string name="viands_recommendation">Recomendación de Viandas"</string>
+    <string name="menu_recommendation">Obtener menú"</string>
     <string name="logout">Salir</string>
     <string name="logout_question">¿Seguro que desea cerrar sesión?</string>
     <string name="yes">SI</string>
     <string name="no">NO</string>
     <string name="user">Usuario:</string>
+    <string name="close_session">Cerrar sesión</string>
 
     <string name="logo">Logo Viander</string>
     <string name="google_login">INGRESAR CON GOOGLE</string>
@@ -87,7 +89,7 @@
 
     <string name="content_description">Content description</string>
     
-    <string name="most_requested">Viandas Populares</string>
+    <string name="most_requested">Las más pedidas</string>
     <string name="createdby">Creado por</string>
     <string name="canelones_de_carne">Canelones de carne</string>
 
