@@ -60,6 +60,7 @@
     <string name="change">Cambiar</string>
     <string name="not_selected_viands">No hay viandas seleccionadas</string>
     <string name="updated_viands">Viandas actualizadas</string>
+    <string name="updated_viands_count">contadores de viandas actualizados</string>
     <string name="confirm">Confirmar</string>
     <string name="chip">Excluye un ingrediente</string>
     <string name="configuration_updated">Configuración actualizada</string>
@@ -69,6 +70,8 @@
     <string name="error_logout">Error en logout:</string>
     <string name="error_user_not_found">Usuario no encontrado</string>
     <string name="error_get_user">Error al obtener usuario:</string>
+    <string name="error_update_counts">Error al actualizar contadores</string>
+    <string name="error_get_counts">Error al obtener contadores</string>
     <string name="error_profile_update">Error al actualizar perfil:</string>
     <string name="error_get_profile">Error al obtener perfil:</string>
     <string name="error_get_post">Error al obtener post:</string>

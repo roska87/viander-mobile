@@ -60,6 +60,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
     @Override
     public void onBindViewHolder(@NonNull ViandMenuViewHolder holder, int position) {
         final ViandMenuViewModel viandMenuViewModel = viandMenuViewModelList.get(position);
+        holder.id = viandMenuViewModel.getId();
         holder.title.setText(viandMenuViewModel.getTitle());
         holder.day.setText(viandMenuViewModel.getDay());
         holder.price.setText(""+viandMenuViewModel.getPrice());
@@ -90,6 +91,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
 
     public static class ViandMenuViewHolder extends RecyclerView.ViewHolder {
 
+        int id;
         TextView title;
         TextView day;
         TextView price;
@@ -116,6 +118,14 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             price += model.getPrice();
         }
         return price;
+    }
+
+    public List<Integer> getViandIds(){
+        List<Integer> ids = new ArrayList<>();
+        for(ViandMenuViewModel model : viandMenuViewModelList){
+            ids.add(model.getId());
+        }
+        return ids;
     }
 
     public static int getModelPrice(RecyclerView recyclerView, int position){

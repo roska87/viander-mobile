@@ -86,6 +86,7 @@ public class ViandasActivity extends AppCompatActivity {
         confirmationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                vianderViewModel.updateViandCount(token, adapter.getViandIds());
                 Intent i = new Intent(ViandasActivity.this, ConfirmationActivity.class);
                 i.putExtra(TOTAL_AMOUNT, adapter.getMenuPrice());
                 startActivity(i);
@@ -108,6 +109,7 @@ public class ViandasActivity extends AppCompatActivity {
             int dayNumber = entry.getKey();
             PostDto postDto = entry.getValue();
             ViandMenuViewModel model = new ViandMenuViewModel();
+            model.setId(postDto.getId());
             model.setTitle(postDto.getTitle());
             model.setImage(postDto.getFile());
             model.setDay(mapDay(dayNumber));

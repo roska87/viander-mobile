@@ -10,17 +10,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Slide;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
@@ -30,14 +34,19 @@ import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
+import com.bit.viandermobile.models.ViandMenuViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
 import static  com.bit.viandermobile.constants.Constants.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -51,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
     private String email, username, token;
 
     // variable for DrawerLayout
-    DrawerLayout drawerLayout;
+    private DrawerLayout drawerLayout;
 
     // variable for ViewPager
     private ViewPager2 viewPager2;
@@ -62,6 +71,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        vianderViewModel = new ViewModelProvider(this, new VianderFactory(getApplication())).get(VianderViewModel.class);
+        sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
+        sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        email = sharedpreferences.getString(EMAIL_KEY, null);
+        username = sharedpreferences.getString(USERNAME_KEY, null);
+        token = sharedpreferences.getString(TOKEN_KEY, null);
+        //recyclerView = findViewById(R.id.recyclerViewViands);
+        vianderViewModel.getViandCounts(token);
 
         // Slider ViewPager
         viewPager2 = findViewById(R.id.viewPagerImageSlider);
@@ -99,36 +116,32 @@ public class HomeActivity extends AppCompatActivity {
                 sliderHandler.postDelayed(sliderRunnable, 3000);
             }
         });
-        //
-
-        vianderViewModel = new ViewModelProvider(this, new VianderFactory(getApplication())).get(VianderViewModel.class);
-        sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
-
-        // initializing our shared preferences.
-        sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-
-        // getting data from shared prefs and
-        // storing it in our string variable.
-        email = sharedpreferences.getString(EMAIL_KEY, null);
-        username = sharedpreferences.getString(USERNAME_KEY, null);
-        token = sharedpreferences.getString(TOKEN_KEY, null);
 
         if(token != null){
             Log.i("Token -> ", token);
         }
 
-        vianderViewModel.getPost(token, 59);
-
-        /*vianderViewModel.getViandsMenu().observe(this, new Observer<List<PostDto>>() {
+        vianderViewModel.getViandCounts().observe(this, new Observer<List<PostDto>>() {
             @Override
             public void onChanged(List<PostDto> postDtos) {
-                if(postDtos != null && !postDtos.isEmpty()){
-                    TextView postView = findViewById(R.id.idPost);
-                    postView.setText(postDtos.get(0).getTitle());
+                Log.i("ViandCount", "get data");
+                LinearLayout linearLayout = findViewById(R.id.most_requested_layout);
+                LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
+                for(PostDto post : postDtos){
+                    View view = inflater.inflate(R.layout.most_requested_item, linearLayout, false);
+                    CardView cardView = (CardView) view;
+                    TextView textView = (TextView) cardView.findViewById(R.id.info_text);
+                    textView.setText(post.getTitle());
+                    ImageView image = (ImageView) cardView.findViewById(R.id.image_main);
+                    Picasso.get()
+                            .load(post.getFile())
+                            .resize(146, 86)
+                            .centerCrop()
+                            .into(image);
+                    linearLayout.addView(cardView);
                 }
             }
-        });*/
-
+        });
 
         // initializing our textview and button.
         TextView welcomeTV = findViewById(R.id.welcome);
@@ -136,8 +149,19 @@ public class HomeActivity extends AppCompatActivity {
 
         TextView user = findViewById(R.id.emailHome);
         user.setText(email);
+    }
 
-
+    private List<ViandMenuViewModel> mapViand(List<PostDto> postList){
+        List<ViandMenuViewModel> modelList = new LinkedList<>();
+        for(PostDto postDto : postList){
+            ViandMenuViewModel model = new ViandMenuViewModel();
+            model.setId(postDto.getId());
+            model.setTitle(postDto.getTitle());
+            model.setImage(postDto.getFile());
+            model.setPrice(postDto.getPrice());
+            modelList.add(model);
+        }
+        return modelList;
     }
 
     //Slider ViewPager

@@ -2,6 +2,7 @@ package com.bit.viandermobile.models;
 
 public class ViandMenuViewModel {
 
+    private int id;
     private String title;
     private String image;
     private String day;
@@ -11,12 +12,21 @@ public class ViandMenuViewModel {
     public ViandMenuViewModel() {
     }
 
-    public ViandMenuViewModel(String title, String image, String day, int price, boolean checked) {
+    public ViandMenuViewModel(int id, String title, String image, String day, int price, boolean checked) {
+        this.id = id;
         this.title = title;
         this.image = image;
         this.day = day;
         this.price = price;
         this.checked = checked;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

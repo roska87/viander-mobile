@@ -5,8 +5,11 @@ import com.bit.viandermobile.domain.LoginRequestDto;
 import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.domain.PostRandomDto;
 import com.bit.viandermobile.domain.PostRandomRequestDto;
+import com.bit.viandermobile.domain.PostViandCountDto;
 import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
+import com.bit.viandermobile.domain.ViandCountDto;
+import com.bit.viandermobile.domain.ViandCountResultDto;
 
 import java.util.List;
 
@@ -52,5 +55,13 @@ public interface RestApiInterface {
     @GET("/api/users/")
     Call<List<UserDto>> getUserByUsername(@Header("Authorization") String token,
                                           @Query("username") String username);
+
+
+    @POST("/api/viand_count/")
+    Call<Object> postViandCount(@Header("Authorization") String token,
+                                @Body PostViandCountDto postViandCountDto);
+
+    @POST("/api/viand_count_result/")
+    Call<ViandCountResultDto> getViandCount(@Header("Authorization") String token);
 
 }

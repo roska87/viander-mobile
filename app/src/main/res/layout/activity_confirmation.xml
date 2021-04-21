@@ -16,13 +16,14 @@
         app:layout_constraintBottom_toTopOf="@id/backHomeButton"
         android:paddingBottom="8dp">
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:layout_margin="8dp"
+            android:background="@drawable/rectangle_lines"
             android:shadowColor="#0270E4">
 
             <LinearLayout
@@ -45,7 +46,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:background="@color/skyblue"
                     android:padding="16dp">
 
                     <!-- Title, secondary and supporting text -->
@@ -87,7 +87,7 @@
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
     </ScrollView>
 
