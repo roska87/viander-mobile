@@ -1,6 +1,8 @@
 package com.bit.viandermobile;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -60,6 +62,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
     @Override
     public void onBindViewHolder(@NonNull ViandMenuViewHolder holder, int position) {
         final ViandMenuViewModel viandMenuViewModel = viandMenuViewModelList.get(position);
+        holder.id = viandMenuViewModel.getId();
         holder.title.setText(viandMenuViewModel.getTitle());
         holder.day.setText(viandMenuViewModel.getDay());
         holder.price.setText(""+viandMenuViewModel.getPrice());
@@ -81,6 +84,18 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
                 Collections.sort(selectedDayNumbers);
             }
         });
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDescription(viandMenuViewModel.getContent());
+            }
+        });
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDescription(viandMenuViewModel.getContent());
+            }
+        });
     }
 
     @Override
@@ -90,6 +105,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
 
     public static class ViandMenuViewHolder extends RecyclerView.ViewHolder {
 
+        int id;
         TextView title;
         TextView day;
         TextView price;
@@ -106,6 +122,19 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         }
     }
 
+    private void showDescription(String desc){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.description));
+        builder.setMessage(desc);
+        builder.setPositiveButton(context.getString(R.string.close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
     public List<Integer> getSelectedViands(){
         return selectedDayNumbers;
     }
@@ -116,6 +145,14 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             price += model.getPrice();
         }
         return price;
+    }
+
+    public List<Integer> getViandIds(){
+        List<Integer> ids = new ArrayList<>();
+        for(ViandMenuViewModel model : viandMenuViewModelList){
+            ids.add(model.getId());
+        }
+        return ids;
     }
 
     public static int getModelPrice(RecyclerView recyclerView, int position){

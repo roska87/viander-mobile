@@ -16,17 +16,20 @@ public class PostDto {
     private String type;
     @SerializedName("price")
     private Integer price;
+    @SerializedName("author")
+    private String author;
 
     public PostDto() {
     }
 
-    public PostDto(int id, String title, String file, String content, String type, Integer price) {
+    public PostDto(int id, String title, String file, String content, String type, Integer price, String author) {
         this.id = id;
         this.title = title;
         this.file = file;
         this.content = content;
         this.type = type;
         this.price = price;
+        this.author = author;
     }
 
     public int getId() {
@@ -77,11 +80,20 @@ public class PostDto {
         this.price = price;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     @Override
     public String toString() {
         return "PostDto{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
                 ", file='" + file + '\'' +
                 ", price='" + price + '\'' +
                 '}';

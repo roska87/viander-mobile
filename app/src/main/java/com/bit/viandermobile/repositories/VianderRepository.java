@@ -2,7 +2,6 @@ package com.bit.viandermobile.repositories;
 
 import android.app.Application;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.Toast;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,8 +11,11 @@ import com.bit.viandermobile.domain.LoginRequestDto;
 import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.domain.PostRandomDto;
 import com.bit.viandermobile.domain.PostRandomRequestDto;
+import com.bit.viandermobile.domain.PostViandCountDto;
 import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
+import com.bit.viandermobile.domain.ViandCountDto;
+import com.bit.viandermobile.domain.ViandCountResultDto;
 import com.bit.viandermobile.rest.RestApiClient;
 import com.bit.viandermobile.rest.RestApiInterface;
 import com.bit.viandermobile.utils.NumberUtil;
@@ -21,7 +23,6 @@ import com.bit.viandermobile.utils.TokenUtil;
 import com.google.android.gms.common.util.CollectionUtils;
 import static org.apache.commons.lang3.StringUtils.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class VianderRepository {
     private MutableLiveData<String> token = new MutableLiveData<>();
     private MutableLiveData<List<PostDto>> viandsMenu = new MutableLiveData<>();
     private MutableLiveData<Map<Integer, PostDto>> randomPosts = new MutableLiveData<>();
+    private MutableLiveData<List<PostDto>> viandCounts = new MutableLiveData<>();
     private Application application;
 
     public VianderRepository(Application application){
@@ -57,6 +59,10 @@ public class VianderRepository {
 
     public LiveData<Map<Integer, PostDto>> getRandomPosts() {
         return randomPosts;
+    }
+
+    public LiveData<List<PostDto>> getViandCounts() {
+        return viandCounts;
     }
 
     public void login(String username, String password){
@@ -258,9 +264,26 @@ public class VianderRepository {
                     public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
                         PostRandomDto randomDto = response.body();
                         Map<Integer, PostDto> map = randomPosts.getValue();
-                        for(int i = 0; i < positions.size(); i++){
+                        for(int i = 0; i < randomDto.getResults().size(); i++){
                             map.put(positions.get(i), randomDto.getResults().get(i));
                         }
+                        // start - fill empty days
+                        int weekDays = positions.size();
+                        int mapSize = map.size();
+                        if(mapSize < weekDays){
+                            Object[] entryArray = map.keySet().toArray();
+                            int difference = weekDays - mapSize;
+                            int count = 0;
+                            while(count < difference){
+                                int number = NumberUtil.getRandomNumber(0, mapSize-1);
+                                Integer key = (Integer) entryArray[number];
+                                PostDto value = map.get(key);
+                                int weekDay = positions.get(mapSize + count);
+                                map.put(weekDay, value);
+                                count++;
+                            }
+                        }
+                        // end - fill empty days
                         randomPosts.setValue(map);
                     }
 
@@ -279,6 +302,39 @@ public class VianderRepository {
             }
         });
 
+    }
+
+    public void updateViandCounts(String token, List<Integer> viandIds){
+        PostViandCountDto postViandCountDto = new PostViandCountDto(viandIds);
+        apiService.postViandCount(token, postViandCountDto).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Log.i("UpdateCounts", application.getApplicationContext().getString(R.string.updated_viands_count));
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                String message = join(application.getApplicationContext().getString(R.string.error_update_counts), " ", t.getMessage());
+                Log.e("UpdateCounts", message);
+            }
+        });
+    }
+
+    public void getViandCounts(String token){
+        apiService.getViandCount(token).enqueue(new Callback<ViandCountResultDto>() {
+            @Override
+            public void onResponse(Call<ViandCountResultDto> call, Response<ViandCountResultDto> response) {
+                Log.i("ViandCounts", "viand count response");
+                viandCounts.setValue(response.body().getResults());
+            }
+
+            @Override
+            public void onFailure(Call<ViandCountResultDto> call, Throwable t) {
+                String message = join(application.getApplicationContext().getString(R.string.error_get_post), " ", t.getMessage());
+                Log.e("ViandCounts", message);
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private PostRandomRequestDto parseFilters(String filters){

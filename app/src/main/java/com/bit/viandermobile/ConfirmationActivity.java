@@ -40,7 +40,7 @@ public class ConfirmationActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int totalAmount = intent.getIntExtra(TOTAL_AMOUNT, TOTAL_AMOUNT_DEFAULT);
-        totalAmountTextView.setText(StringUtils.join(getString(R.string.confirmation_total_amount_message), " ", totalAmount));
+        totalAmountTextView.setText(StringUtils.join(getString(R.string.confirmation_total_amount_message), totalAmount));
 
         Button confirmationBtn = findViewById(R.id.backHomeButton);
         confirmationBtn.setOnClickListener(new View.OnClickListener() {

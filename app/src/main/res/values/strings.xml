@@ -6,11 +6,13 @@
     <string name="confirmation">Confirmación</string>
     <string name="configuration">Configuración</string>
     <string name="viands_recommendation">Recomendación de Viandas"</string>
+    <string name="menu_recommendation">Obtener menú"</string>
     <string name="logout">Salir</string>
     <string name="logout_question">¿Seguro que desea cerrar sesión?</string>
     <string name="yes">SI</string>
     <string name="no">NO</string>
     <string name="user">Usuario:</string>
+    <string name="close_session">Cerrar sesión</string>
 
     <string name="logo">Logo Viander</string>
     <string name="google_login">INGRESAR CON GOOGLE</string>
@@ -58,6 +60,7 @@
     <string name="change">Cambiar</string>
     <string name="not_selected_viands">No hay viandas seleccionadas</string>
     <string name="updated_viands">Viandas actualizadas</string>
+    <string name="updated_viands_count">contadores de viandas actualizados</string>
     <string name="confirm">Confirmar</string>
     <string name="chip">Excluye un ingrediente</string>
     <string name="configuration_updated">Configuración actualizada</string>
@@ -67,6 +70,8 @@
     <string name="error_logout">Error en logout:</string>
     <string name="error_user_not_found">Usuario no encontrado</string>
     <string name="error_get_user">Error al obtener usuario:</string>
+    <string name="error_update_counts">Error al actualizar contadores</string>
+    <string name="error_get_counts">Error al obtener contadores</string>
     <string name="error_profile_update">Error al actualizar perfil:</string>
     <string name="error_get_profile">Error al obtener perfil:</string>
     <string name="error_get_post">Error al obtener post:</string>
@@ -86,8 +91,10 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="content_description">Content description</string>
+    <string name="description">Descripción</string>
+    <string name="close">cerrar</string>
     
-    <string name="most_requested">Viandas Populares</string>
+    <string name="most_requested">Las más pedidas</string>
     <string name="createdby">Creado por</string>
     <string name="canelones_de_carne">Canelones de carne</string>
 

@@ -16,6 +16,7 @@ import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.domain.ProfileDto;
 import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.repositories.VianderRepository;
+import com.google.android.gms.common.util.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,6 +31,7 @@ public class VianderViewModel extends AndroidViewModel {
     private LiveData<String> token;
     private LiveData<List<PostDto>> viandsMenu;
     private LiveData<Map<Integer, PostDto>> menu;
+    private LiveData<List<PostDto>> viandCounts;
 
     public VianderViewModel(@NonNull Application application){
         super(application);
@@ -38,6 +40,7 @@ public class VianderViewModel extends AndroidViewModel {
         token = vianderRepository.getToken();
         viandsMenu = vianderRepository.getViands();
         menu = vianderRepository.getRandomPosts();
+        viandCounts = vianderRepository.getViandCounts();
     }
 
     public LiveData<UserDto> getLoggedUser(){
@@ -58,6 +61,14 @@ public class VianderViewModel extends AndroidViewModel {
 
     public LiveData<Map<Integer, PostDto>> getMenu(){
         return menu;
+    }
+
+    public LiveData<List<PostDto>> getViandCounts() {
+        return viandCounts;
+    }
+
+    public void getViandCounts(String token){
+        vianderRepository.getViandCounts(token);
     }
 
     public void getMenu(String token, String username){
@@ -97,6 +108,12 @@ public class VianderViewModel extends AndroidViewModel {
             filters.append(pair.first ? "" : "!").append(pair.second).append(",");
         }
         return filters.toString();
+    }
+
+    public void updateViandCount(String token, List<Integer> viandIds){
+        if(!CollectionUtils.isEmpty(viandIds)){
+            vianderRepository.updateViandCounts(token, viandIds);
+        }
     }
 
 }
