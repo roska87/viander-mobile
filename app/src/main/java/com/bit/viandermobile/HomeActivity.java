@@ -40,8 +40,8 @@ import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.StringUtils;
-import static  com.bit.viandermobile.constants.Constants.*;
+import static org.apache.commons.lang3.StringUtils.*;
+import static com.bit.viandermobile.constants.Constants.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -54,15 +54,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private VianderViewModel vianderViewModel;
     private SessionViewModel sessionViewModel;
-
-    // variable for shared preferences.
     private SharedPreferences sharedpreferences;
     private String email, username, token;
-
-    // variable for DrawerLayout
     private DrawerLayout drawerLayout;
-
-    // variable for ViewPager
     private ViewPager2 viewPager2;
     private Handler sliderHandler = new Handler();
 
@@ -77,8 +71,14 @@ public class HomeActivity extends AppCompatActivity {
         email = sharedpreferences.getString(EMAIL_KEY, null);
         username = sharedpreferences.getString(USERNAME_KEY, null);
         token = sharedpreferences.getString(TOKEN_KEY, null);
-        //recyclerView = findViewById(R.id.recyclerViewViands);
         vianderViewModel.getViandCounts(token);
+
+        // initializing our textview and button.
+        TextView welcomeTV = findViewById(R.id.welcome);
+        welcomeTV.setText(join(getString(R.string.welcome)));
+
+        TextView user = findViewById(R.id.emailHome);
+        user.setText(email);
 
         // Slider ViewPager
         viewPager2 = findViewById(R.id.viewPagerImageSlider);
@@ -130,38 +130,41 @@ public class HomeActivity extends AppCompatActivity {
                 for(PostDto post : postDtos){
                     View view = inflater.inflate(R.layout.most_requested_item, linearLayout, false);
                     CardView cardView = (CardView) view;
-                    TextView textView = (TextView) cardView.findViewById(R.id.info_text);
-                    textView.setText(post.getTitle());
+                    TextView textViewTitle = (TextView) cardView.findViewById(R.id.info_text);
+                    textViewTitle.setText(post.getTitle());
+                    TextView textViewCreated = (TextView) cardView.findViewById(R.id.created_by);
+                    textViewCreated.setText(join(getString(R.string.createdby), " ", post.getAuthor()));
                     ImageView image = (ImageView) cardView.findViewById(R.id.image_main);
                     Picasso.get()
                             .load(post.getFile())
                             .resize(146, 86)
                             .centerCrop()
                             .into(image);
+                    cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showDescription(post.getContent());
+                        }
+                    });
                     linearLayout.addView(cardView);
                 }
             }
         });
 
-        // initializing our textview and button.
-        TextView welcomeTV = findViewById(R.id.welcome);
-        welcomeTV.setText(StringUtils.join(getString(R.string.welcome)));
 
-        TextView user = findViewById(R.id.emailHome);
-        user.setText(email);
     }
 
-    private List<ViandMenuViewModel> mapViand(List<PostDto> postList){
-        List<ViandMenuViewModel> modelList = new LinkedList<>();
-        for(PostDto postDto : postList){
-            ViandMenuViewModel model = new ViandMenuViewModel();
-            model.setId(postDto.getId());
-            model.setTitle(postDto.getTitle());
-            model.setImage(postDto.getFile());
-            model.setPrice(postDto.getPrice());
-            modelList.add(model);
-        }
-        return modelList;
+    private void showDescription(String desc){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.description));
+        builder.setMessage(desc);
+        builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     //Slider ViewPager

@@ -1,7 +1,9 @@
 package com.bit.viandermobile;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -111,6 +113,7 @@ public class ViandasActivity extends AppCompatActivity {
             ViandMenuViewModel model = new ViandMenuViewModel();
             model.setId(postDto.getId());
             model.setTitle(postDto.getTitle());
+            model.setContent(postDto.getContent());
             model.setImage(postDto.getFile());
             model.setDay(mapDay(dayNumber));
             model.setPrice(postDto.getPrice());

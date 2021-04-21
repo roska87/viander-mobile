@@ -4,6 +4,7 @@ public class ViandMenuViewModel {
 
     private int id;
     private String title;
+    private String content;
     private String image;
     private String day;
     private int price;
@@ -12,9 +13,10 @@ public class ViandMenuViewModel {
     public ViandMenuViewModel() {
     }
 
-    public ViandMenuViewModel(int id, String title, String image, String day, int price, boolean checked) {
+    public ViandMenuViewModel(int id, String title, String content, String image, String day, int price, boolean checked) {
         this.id = id;
         this.title = title;
+        this.content = content;
         this.image = image;
         this.day = day;
         this.price = price;
@@ -35,6 +37,14 @@ public class ViandMenuViewModel {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getImage() {

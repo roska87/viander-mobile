@@ -1,6 +1,8 @@
 package com.bit.viandermobile;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -82,6 +84,18 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
                 Collections.sort(selectedDayNumbers);
             }
         });
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDescription(viandMenuViewModel.getContent());
+            }
+        });
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDescription(viandMenuViewModel.getContent());
+            }
+        });
     }
 
     @Override
@@ -106,6 +120,19 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             image = itemView.findViewById(R.id.viand_image);
             check = itemView.findViewById(R.id.checkBox);
         }
+    }
+
+    private void showDescription(String desc){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.description));
+        builder.setMessage(desc);
+        builder.setPositiveButton(context.getString(R.string.close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     public List<Integer> getSelectedViands(){
