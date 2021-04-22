@@ -388,7 +388,12 @@ public class VianderRepository {
             @Override
             public void onResponse(Call<ViandCountResultDto> call, Response<ViandCountResultDto> response) {
                 Log.i("ViandCounts", "viand count response");
-                viandCounts.setValue(response.body().getResults());
+                if(response.body() != null){
+                    viandCounts.setValue(response.body().getResults());
+                }else{
+                    String message = join(application.getApplicationContext().getString(R.string.error_get_post));
+                    Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
