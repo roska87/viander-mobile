@@ -1,15 +1,18 @@
 package com.bit.viandermobile;
 
+import com.google.android.gms.common.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViandPositions {
 
-    private Integer changePosition;
+    private List<Integer> changePosition;
     private List<Integer> positions;
 
     private ViandPositions(){
         this.positions = new ArrayList<>();
+        this.changePosition = new ArrayList<>();
     }
 
     public static ViandPositions initialize(){
@@ -25,19 +28,23 @@ public class ViandPositions {
     }
 
     public void addChangePosition(int changePosition){
-        this.changePosition = changePosition;
+        this.changePosition.add(changePosition);
     }
 
     public boolean hasChangePosition(){
-        return this.changePosition != null;
+        return !CollectionUtils.isEmpty(this.changePosition);
     }
 
-    public Integer getChangePosition(){
+    public List<Integer> getChangePosition(){
         return this.changePosition;
     }
 
+    public void removeChangePosition(int changePosition){
+        this.changePosition.remove((Integer) changePosition);
+    }
+
     public void removeChangePosition(){
-        this.changePosition = null;
+        this.changePosition = new ArrayList<>();
     }
 
     public void removePosition(int position){

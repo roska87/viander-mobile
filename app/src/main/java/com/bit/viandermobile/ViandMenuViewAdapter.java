@@ -3,6 +3,7 @@ package com.bit.viandermobile;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -66,11 +67,13 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         this.viandPositions = viandPositions;
     }
 
-    public void updateData(List<ViandMenuViewModel> menuList, List<PostDto> postDtos, Integer changedPosition){
+    public void updateData(List<ViandMenuViewModel> menuList, List<PostDto> postDtos, List<Integer> changedPosition){
         this.viandMenuViewModelList = menuList;
         this.allViands = postDtos;
-        if(changedPosition != null){
-            notifyItemChanged(changedPosition);
+        if(!CollectionUtils.isEmpty(changedPosition)){
+            for(Integer pos : changedPosition){
+                notifyItemChanged(pos);
+            }
         }else{
             notifyDataSetChanged();
         }
@@ -113,8 +116,10 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     selectedDayNumbers.add((Integer) holder.dayNumber);
+                    viandPositions.addChangePosition(position);
                 }else{
                     selectedDayNumbers.remove((Integer) holder.dayNumber);
+                    viandPositions.removeChangePosition(position);
                 }
                 Collections.sort(selectedDayNumbers);
             }
@@ -151,6 +156,18 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             this.viandPositions.removeAll();
         }
     }
+
+    /*
+    private void setAnimation(View viewToAnimate, int position){
+        Log.i("POSITIONS", ""+this.viandPositions);
+        if(this.viandPositions.getChangePosition().contains(position)){
+            //Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
+            viewToAnimate.startAnimation(refreshAnimation);
+            this.viandPositions.removeChangePosition((Integer) position);
+        }
+    }
+
+     */
 
     @Override
     public int getItemCount() {
