@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Slide;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -155,7 +156,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showDescription(String desc){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Light));
         builder.setTitle(getString(R.string.description));
         builder.setMessage(desc);
         builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {

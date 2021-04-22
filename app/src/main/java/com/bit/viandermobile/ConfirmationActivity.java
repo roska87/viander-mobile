@@ -49,6 +49,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                 Intent i = new Intent(ConfirmationActivity.this, HomeActivity.class);
                 startActivity(i);
                 finish();
+                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
             }
         });
 

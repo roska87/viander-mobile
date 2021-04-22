@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -264,6 +265,17 @@ public class ConfigurationActivity extends AppCompatActivity {
         // End Chip functions
         // ------------------
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

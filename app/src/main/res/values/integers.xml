@@ -3,4 +3,5 @@
     <integer name="name">1</integer>
     <integer name="viand_image_width">146</integer>
     <integer name="viand_image_height">86</integer>
+    <integer name="time_duration_max">5000</integer>
 </resources>
