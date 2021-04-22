@@ -47,6 +47,7 @@ public class ViandasActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ViandMenuViewAdapter adapter;
     private TextView menuPrice;
+    private ViandPositions viandPositions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +62,31 @@ public class ViandasActivity extends AppCompatActivity {
         vianderViewModel.getAllViands(token, username);
         recyclerView = findViewById(R.id.recyclerView);
         menuPrice = findViewById(R.id.menu_price_amount);
+        recyclerView.scheduleLayoutAnimation();
+        viandPositions = ViandPositions.initialize();
 
+        adapter = new ViandMenuViewAdapter(ViandasActivity.this, new ArrayList<>(),
+                new ArrayList<>(), vianderViewModel, viandPositions);
 
         vianderViewModel.getMenu().observe(ViandasActivity.this, new Observer<Map<Integer, PostDto>>() {
             @Override
             public void onChanged(Map<Integer, PostDto> postDtoMap) {
                 List<ViandMenuViewModel> menuList = mapViand(postDtoMap);
+
                 vianderViewModel.getAllViands().observe(ViandasActivity.this, new Observer<List<PostDto>>() {
                     @Override
                     public void onChanged(List<PostDto> postDtos) {
-                        adapter = new ViandMenuViewAdapter(ViandasActivity.this, menuList,
-                                postDtos, vianderViewModel);
-                        recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
-                        menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
+                        if(viandPositions.hasChangePosition()){
+                            adapter.updateData(menuList, postDtos, viandPositions.getChangePosition());
+                            viandPositions.removeChangePosition();
+                        }else{
+                            adapter.updateData(menuList, postDtos, null);
+                            recyclerView.setAdapter(adapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
+                            menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
+                            recyclerView.scheduleLayoutAnimation();
+                        }
+
                     }
                 });
             }

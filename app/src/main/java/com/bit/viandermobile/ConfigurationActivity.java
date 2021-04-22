@@ -281,6 +281,7 @@ public class ConfigurationActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // TODO guardar estados
+
         //savedInstanceState.putBoolean("MyBoolean", true);
         //savedInstanceState.putDouble("myDouble", 1.9);
         //savedInstanceState.putInt("MyInt", 1);
