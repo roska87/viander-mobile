@@ -83,10 +83,9 @@ public class ViandasActivity extends AppCompatActivity {
                             adapter.updateData(menuList, postDtos, null);
                             recyclerView.setAdapter(adapter);
                             recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
-                            menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
                             recyclerView.scheduleLayoutAnimation();
                         }
-
+                        menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
                     }
                 });
             }
