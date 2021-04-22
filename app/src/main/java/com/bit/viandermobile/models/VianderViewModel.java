@@ -32,6 +32,7 @@ public class VianderViewModel extends AndroidViewModel {
     private LiveData<List<PostDto>> viandsMenu;
     private LiveData<Map<Integer, PostDto>> menu;
     private LiveData<List<PostDto>> viandCounts;
+    private LiveData<List<PostDto>> allViands;
 
     public VianderViewModel(@NonNull Application application){
         super(application);
@@ -41,6 +42,7 @@ public class VianderViewModel extends AndroidViewModel {
         viandsMenu = vianderRepository.getViands();
         menu = vianderRepository.getRandomPosts();
         viandCounts = vianderRepository.getViandCounts();
+        allViands = vianderRepository.getAllViands();
     }
 
     public LiveData<UserDto> getLoggedUser(){
@@ -65,6 +67,10 @@ public class VianderViewModel extends AndroidViewModel {
 
     public LiveData<List<PostDto>> getViandCounts() {
         return viandCounts;
+    }
+
+    public LiveData<List<PostDto>> getAllViands() {
+        return allViands;
     }
 
     public void getViandCounts(String token){
@@ -102,6 +108,10 @@ public class VianderViewModel extends AndroidViewModel {
         vianderRepository.getPost(token, id);
     }
 
+    public void getAllViands(String token, String username){
+        vianderRepository.getAvailablePosts(token, username);
+    }
+
     private String formatFilters(List<Pair<Boolean, String>> filterList){
         StringBuilder filters = new StringBuilder();
         for(Pair<Boolean, String> pair : filterList){
@@ -114,6 +124,10 @@ public class VianderViewModel extends AndroidViewModel {
         if(!CollectionUtils.isEmpty(viandIds)){
             vianderRepository.updateViandCounts(token, viandIds);
         }
+    }
+
+    public void updateViand(int dayNumber, PostDto postDto){
+        vianderRepository.updateViand(dayNumber, postDto);
     }
 
 }

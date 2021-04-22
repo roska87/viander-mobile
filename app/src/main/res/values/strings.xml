@@ -93,6 +93,9 @@
     <string name="content_description">Content description</string>
     <string name="description">Descripción</string>
     <string name="close">cerrar</string>
+    <string name="ok">ok</string>
+    <string name="cancel">cancelar</string>
+    <string name="change_viand">Cambiar vianda</string>
     
     <string name="most_requested">Las más pedidas</string>
     <string name="createdby">Creado por</string>
