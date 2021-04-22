@@ -7,27 +7,29 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bit.viandermobile.models.CheckboxViewModel;
+import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.models.ViandMenuViewModel;
+import com.bit.viandermobile.models.VianderViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdapter.ViandMenuViewHolder> {
@@ -35,11 +37,18 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
     private Context context;
     private List<ViandMenuViewModel> viandMenuViewModelList;
     private List<Integer> selectedDayNumbers;
+    private List<PostDto> allViands;
+    private VianderViewModel vianderViewModel;
 
-    public ViandMenuViewAdapter(List<ViandMenuViewModel> viandMenuViewModelList, Context context){
+    public ViandMenuViewAdapter(Context context,
+                                List<ViandMenuViewModel> viandMenuViewModelList,
+                                List<PostDto> allViands,
+                                VianderViewModel vianderViewModel){
         this.context = context;
         this.viandMenuViewModelList = viandMenuViewModelList;
+        this.allViands = allViands;
         this.selectedDayNumbers = new ArrayList<>();
+        this.vianderViewModel = vianderViewModel;
     }
 
     @NonNull
@@ -66,7 +75,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         holder.dayNumber = viandMenuViewModel.getDayNumber();
         holder.title.setText(viandMenuViewModel.getTitle());
         holder.day.setText(viandMenuViewModel.getDay());
-        holder.price.setText(""+viandMenuViewModel.getPrice());
+        holder.price.setText(String.valueOf(viandMenuViewModel.getPrice()));
         //new DownloadImageTask(holder.image).execute(viandMenuViewModel.getImage());
         Picasso.get()
                 .load(viandMenuViewModel.getImage())
@@ -97,6 +106,12 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
                 showDescription(viandMenuViewModel.getContent());
             }
         });
+        holder.refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDescription(holder.dayNumber);
+            }
+        });
     }
 
     @Override
@@ -113,6 +128,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         TextView price;
         ImageView image;
         CheckBox check;
+        ImageView refresh;
 
         public ViandMenuViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,7 +137,43 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             day = itemView.findViewById(R.id.viand_day);
             image = itemView.findViewById(R.id.viand_image);
             check = itemView.findViewById(R.id.checkBox);
+            refresh = itemView.findViewById(R.id.refresh);
         }
+    }
+
+    private void showDescription(int dayNumber){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        dialogBuilder.setTitle(R.string.change_viand);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        final View myView = inflater.inflate(R.layout.dialog_viand_items, null);
+        dialogBuilder.setView(myView);
+        Spinner checkInProviders = (Spinner) myView.findViewById(R.id.providers);
+        ArrayAdapter<PostDto> dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item);
+        dataAdapter.addAll(allViands);
+        dataAdapter.sort((o1, o2) -> o1.getTitle().compareTo(o2.getTitle()));
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        checkInProviders.setAdapter(dataAdapter);
+
+        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PostDto postDto = (PostDto) checkInProviders.getSelectedItem();
+                //Log.i("SelectedViand", postDto.getDescription());
+                List<Integer> selected = new ArrayList<>();
+                selected.add(dayNumber);
+                vianderViewModel.updateViand(dayNumber, postDto);
+                dialog.dismiss();
+            }
+        });
+
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialogBuilder.show();
     }
 
     private void showDescription(String desc){

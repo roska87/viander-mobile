@@ -90,12 +90,18 @@ public class PostDto {
 
     @Override
     public String toString() {
+        return title;
+    }
+
+    public String getDescription() {
         return "PostDto{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
                 ", file='" + file + '\'' +
-                ", price='" + price + '\'' +
+                ", content='" + content + '\'' +
+                ", type='" + type + '\'' +
+                ", price=" + price +
+                ", author='" + author + '\'' +
                 '}';
     }
 }

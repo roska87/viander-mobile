@@ -39,6 +39,7 @@ public class VianderRepository {
     private MutableLiveData<List<PostDto>> viandsMenu = new MutableLiveData<>();
     private MutableLiveData<Map<Integer, PostDto>> randomPosts = new MutableLiveData<>();
     private MutableLiveData<List<PostDto>> viandCounts = new MutableLiveData<>();
+    private MutableLiveData<List<PostDto>> allViands = new MutableLiveData<>();
     private Application application;
 
     public VianderRepository(Application application){
@@ -63,6 +64,16 @@ public class VianderRepository {
 
     public LiveData<List<PostDto>> getViandCounts() {
         return viandCounts;
+    }
+
+    public LiveData<List<PostDto>> getAllViands() {
+        return allViands;
+    }
+
+    public void updateViand(int dayNumber, PostDto postDto){
+        Map<Integer, PostDto> currentMenu = randomPosts.getValue();
+        currentMenu.put(dayNumber, postDto);
+        randomPosts.setValue(currentMenu);
     }
 
     public void login(String username, String password){
@@ -178,6 +189,58 @@ public class VianderRepository {
             @Override
             public void onFailure(Call<PostDto> call, Throwable t) {
                 String message = join(application.getApplicationContext().getString(R.string.error_get_post), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void getPosts(String token){
+        apiService.getPosts(token).enqueue(new Callback<List<PostDto>>() {
+            @Override
+            public void onResponse(Call<List<PostDto>> call, Response<List<PostDto>> response) {
+                Log.i("GET ALL POSTS", response.body().toString());
+                allViands.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<PostDto>> call, Throwable t) {
+                String message = join(application.getApplicationContext().getString(R.string.error_get_post), " ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void getAvailablePosts(String token, String username){
+        apiService.getUserByUsername(token, username).enqueue(new Callback<List<UserDto>>() {
+            @Override
+            public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
+                List<UserDto> body = response.body();
+                if(CollectionUtils.isEmpty(body)){
+                    String message = join(application.getApplicationContext().getString(R.string.error_get_user));
+                    Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                }
+                UserDto user = body.get(0);
+                ProfileDto profile = user.getProfile();
+                PostRandomRequestDto postRandomRequestDto = parseFilters(profile.getFilters());
+                apiService.getPostRandom(token, 30, postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
+                    @Override
+                    public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
+                        PostRandomDto randomDto = response.body();
+                        allViands.setValue(randomDto.getResults());
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostRandomDto> call, Throwable t) {
+                        String message = join(application.getApplicationContext().getString(R.string.error_get_random_post), " ", t.getMessage());
+                        Log.e("Error", message);
+                        Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<UserDto>> call, Throwable t) {
+                String message = join(application.getApplicationContext().getString(R.string.error_get_user), " ", t.getMessage());
                 Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });

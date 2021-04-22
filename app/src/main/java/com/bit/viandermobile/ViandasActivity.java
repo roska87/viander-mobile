@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,17 +58,25 @@ public class ViandasActivity extends AppCompatActivity {
         username = sharedPreferences.getString(USERNAME_KEY, null);
         token = sharedPreferences.getString(TOKEN_KEY, null);
         vianderViewModel.getMenu(token, username);
+        vianderViewModel.getAllViands(token, username);
         recyclerView = findViewById(R.id.recyclerView);
         menuPrice = findViewById(R.id.menu_price_amount);
+
 
         vianderViewModel.getMenu().observe(ViandasActivity.this, new Observer<Map<Integer, PostDto>>() {
             @Override
             public void onChanged(Map<Integer, PostDto> postDtoMap) {
                 List<ViandMenuViewModel> menuList = mapViand(postDtoMap);
-                adapter = new ViandMenuViewAdapter(menuList, ViandasActivity.this);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
-                menuPrice.setText(""+getTotalAmount(menuList));
+                vianderViewModel.getAllViands().observe(ViandasActivity.this, new Observer<List<PostDto>>() {
+                    @Override
+                    public void onChanged(List<PostDto> postDtos) {
+                        adapter = new ViandMenuViewAdapter(ViandasActivity.this, menuList,
+                                postDtos, vianderViewModel);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
+                        menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
+                    }
+                });
             }
         });
 

@@ -35,6 +35,9 @@ public interface RestApiInterface {
     Call<PostDto> getPosts(@Header("Authorization") String token,
                            @Path("id") int id);
 
+    @GET("/api/posts/")
+    Call<List<PostDto>> getPosts(@Header("Authorization") String token);
+
     @POST("/api/random/")
     Call<PostRandomDto> getPostRandom(@Header("Authorization") String token,
                                       @Query("limit") int limit,
