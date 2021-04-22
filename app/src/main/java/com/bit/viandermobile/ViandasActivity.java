@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -97,6 +98,17 @@ public class ViandasActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private int getTotalAmount(List<ViandMenuViewModel> menuList){
         int sum = 0;
         for(ViandMenuViewModel model : menuList){
@@ -112,6 +124,7 @@ public class ViandasActivity extends AppCompatActivity {
             PostDto postDto = entry.getValue();
             ViandMenuViewModel model = new ViandMenuViewModel();
             model.setId(postDto.getId());
+            model.setDayNumber(dayNumber);
             model.setTitle(postDto.getTitle());
             model.setContent(postDto.getContent());
             model.setImage(postDto.getFile());

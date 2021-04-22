@@ -3,6 +3,7 @@ package com.bit.viandermobile.models;
 public class ViandMenuViewModel {
 
     private int id;
+    private int dayNumber;
     private String title;
     private String content;
     private String image;
@@ -13,8 +14,9 @@ public class ViandMenuViewModel {
     public ViandMenuViewModel() {
     }
 
-    public ViandMenuViewModel(int id, String title, String content, String image, String day, int price, boolean checked) {
+    public ViandMenuViewModel(int id, int dayNumber, String title, String content, String image, String day, int price, boolean checked) {
         this.id = id;
+        this.dayNumber = dayNumber;
         this.title = title;
         this.content = content;
         this.image = image;
@@ -29,6 +31,14 @@ public class ViandMenuViewModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getDayNumber() {
+        return dayNumber;
+    }
+
+    public void setDayNumber(int dayNumber) {
+        this.dayNumber = dayNumber;
     }
 
     public String getTitle() {

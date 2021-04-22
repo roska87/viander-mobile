@@ -63,6 +63,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
     public void onBindViewHolder(@NonNull ViandMenuViewHolder holder, int position) {
         final ViandMenuViewModel viandMenuViewModel = viandMenuViewModelList.get(position);
         holder.id = viandMenuViewModel.getId();
+        holder.dayNumber = viandMenuViewModel.getDayNumber();
         holder.title.setText(viandMenuViewModel.getTitle());
         holder.day.setText(viandMenuViewModel.getDay());
         holder.price.setText(""+viandMenuViewModel.getPrice());
@@ -77,9 +78,9 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    selectedDayNumbers.add((Integer) position);
+                    selectedDayNumbers.add((Integer) holder.dayNumber);
                 }else{
-                    selectedDayNumbers.remove((Integer) position);
+                    selectedDayNumbers.remove((Integer) holder.dayNumber);
                 }
                 Collections.sort(selectedDayNumbers);
             }
@@ -106,6 +107,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
     public static class ViandMenuViewHolder extends RecyclerView.ViewHolder {
 
         int id;
+        int dayNumber;
         TextView title;
         TextView day;
         TextView price;
