@@ -3,6 +3,7 @@ package com.bit.viandermobile;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -10,6 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,11 +23,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bit.viandermobile.domain.PostDto;
 import com.bit.viandermobile.models.ViandMenuViewModel;
 import com.bit.viandermobile.models.VianderViewModel;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
@@ -34,21 +40,43 @@ import java.util.List;
 
 public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdapter.ViandMenuViewHolder> {
 
-    private Context context;
+    private final Context context;
     private List<ViandMenuViewModel> viandMenuViewModelList;
-    private List<Integer> selectedDayNumbers;
+    private final List<Integer> selectedDayNumbers;
     private List<PostDto> allViands;
-    private VianderViewModel vianderViewModel;
+    private final VianderViewModel vianderViewModel;
+    private final Animation refreshAnimation;
+    private ViandPositions viandPositions;
 
     public ViandMenuViewAdapter(Context context,
                                 List<ViandMenuViewModel> viandMenuViewModelList,
                                 List<PostDto> allViands,
-                                VianderViewModel vianderViewModel){
+                                VianderViewModel vianderViewModel,
+                                ViandPositions viandPositions){
         this.context = context;
         this.viandMenuViewModelList = viandMenuViewModelList;
         this.allViands = allViands;
         this.selectedDayNumbers = new ArrayList<>();
         this.vianderViewModel = vianderViewModel;
+
+        this.refreshAnimation = new RotateAnimation(0.0f, 360.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        this.refreshAnimation.setRepeatCount(0);
+        this.refreshAnimation.setDuration(2000);
+        this.viandPositions = viandPositions;
+    }
+
+    public void updateData(List<ViandMenuViewModel> menuList, List<PostDto> postDtos, List<Integer> changedPosition){
+        this.viandMenuViewModelList = menuList;
+        this.allViands = postDtos;
+        if(!CollectionUtils.isEmpty(changedPosition)){
+            for(Integer pos : changedPosition){
+                notifyItemChanged(pos);
+            }
+        }else{
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -88,8 +116,10 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     selectedDayNumbers.add((Integer) holder.dayNumber);
+                    viandPositions.addChangePosition(position);
                 }else{
                     selectedDayNumbers.remove((Integer) holder.dayNumber);
+                    viandPositions.removeChangePosition(position);
                 }
                 Collections.sort(selectedDayNumbers);
             }
@@ -109,10 +139,35 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         holder.refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDescription(holder.dayNumber);
+                v.startAnimation(refreshAnimation);
+                showDescription(holder.dayNumber, holder, position);
+                viandPositions.addPosition(position);
+                viandPositions.addChangePosition(position);
             }
         });
+        setAnimation(holder.refresh, position);
     }
+
+    private void setAnimation(View viewToAnimate, int position){
+        Log.i("POSITIONS", ""+this.viandPositions);
+        if(this.viandPositions.getPositions().contains(position)){
+            //Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
+            viewToAnimate.startAnimation(refreshAnimation);
+            this.viandPositions.removeAll();
+        }
+    }
+
+    /*
+    private void setAnimation(View viewToAnimate, int position){
+        Log.i("POSITIONS", ""+this.viandPositions);
+        if(this.viandPositions.getChangePosition().contains(position)){
+            //Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
+            viewToAnimate.startAnimation(refreshAnimation);
+            this.viandPositions.removeChangePosition((Integer) position);
+        }
+    }
+
+     */
 
     @Override
     public int getItemCount() {
@@ -141,7 +196,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         }
     }
 
-    private void showDescription(int dayNumber){
+    private void showDescription(int dayNumber, ViandMenuViewHolder v, int position){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setTitle(R.string.change_viand);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -163,6 +218,8 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
                 selected.add(dayNumber);
                 vianderViewModel.updateViand(dayNumber, postDto);
                 dialog.dismiss();
+                v.refresh.startAnimation(refreshAnimation);
+                notifyItemChanged(position);
             }
         });
 
