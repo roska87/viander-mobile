@@ -138,8 +138,8 @@ public class HomeActivity extends AppCompatActivity {
                     ImageView image = (ImageView) cardView.findViewById(R.id.image_main);
                     Picasso.get()
                             .load(post.getFile())
-                            .resize(146, 86)
                             .centerCrop()
+                            .fit()
                             .into(image);
                     cardView.setOnClickListener(new View.OnClickListener() {
                         @Override

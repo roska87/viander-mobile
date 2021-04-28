@@ -107,8 +107,8 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         //new DownloadImageTask(holder.image).execute(viandMenuViewModel.getImage());
         Picasso.get()
                 .load(viandMenuViewModel.getImage())
-                .resize(146, 86)
                 .centerCrop()
+                .fit()
                 .into(holder.image);
         holder.check.setChecked(viandMenuViewModel.isChecked());
         holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
