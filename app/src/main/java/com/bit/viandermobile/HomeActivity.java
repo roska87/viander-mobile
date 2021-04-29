@@ -119,13 +119,13 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         if(token != null){
-            Log.i("Token -> ", token);
+            //Log.i("Token -> ", token);
         }
 
         vianderViewModel.getViandCounts().observe(this, new Observer<List<PostDto>>() {
             @Override
             public void onChanged(List<PostDto> postDtos) {
-                Log.i("ViandCount", "get data");
+                //Log.i("ViandCount", "get data");
                 LinearLayout linearLayout = findViewById(R.id.most_requested_layout);
                 LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
                 for(PostDto post : postDtos){

@@ -149,7 +149,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
     }
 
     private void setAnimation(View viewToAnimate, int position){
-        Log.i("POSITIONS", ""+this.viandPositions);
+        //Log.i("POSITIONS", ""+this.viandPositions);
         if(this.viandPositions.getPositions().contains(position)){
             //Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
             viewToAnimate.startAnimation(refreshAnimation);
@@ -159,7 +159,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
 
     /*
     private void setAnimation(View viewToAnimate, int position){
-        Log.i("POSITIONS", ""+this.viandPositions);
+        //Log.i("POSITIONS", ""+this.viandPositions);
         if(this.viandPositions.getChangePosition().contains(position)){
             //Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
             viewToAnimate.startAnimation(refreshAnimation);
@@ -287,7 +287,7 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
+                //Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;

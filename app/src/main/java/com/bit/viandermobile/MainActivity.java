@@ -46,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onChanged(Session session) {
                         Intent intent = null;
                         if(session == null){
-                            Log.i("Launch", "Login");
+                            //Log.i("Launch", "Login");
                             intent = new Intent(MainActivity.this, LoginActivity.class);
                         }else{
-                            Log.i("Launch", "Home");
+                            //Log.i("Launch", "Home");
                             intent = new Intent(MainActivity.this, HomeActivity.class);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.putString(USERNAME_KEY, session.getUsername());

@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         sessionViewModel.save(new Session(vianderViewModel.getToken().getValue(), userDto.getUsername()));
 
-                        Log.i("LoggedUser", userDto.getUsername());
+                        //Log.i("LoggedUser", userDto.getUsername());
                         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(i);
                         finish();

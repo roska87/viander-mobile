@@ -77,15 +77,15 @@ public class VianderRepository {
     }
 
     public void login(String username, String password){
-        Log.i("username", username);
-        Log.i("password", password);
+        //Log.i("username", username);
+        //Log.i("password", password);
         LoginRequestDto login = new LoginRequestDto(username, password);
         apiService.login(login).enqueue(new Callback<LoginDto>() {
             @Override
             public void onResponse(Call<LoginDto> call, Response<LoginDto> response) {
                 if(response.body() != null && response.body().getKey() != null){
                     String tokenKey = response.body().getKey();
-                    Log.i("login", tokenKey);
+                    //Log.i("login", tokenKey);
                     if(tokenKey != null){
                         String tokenStr = TokenUtil.formatTokenKey(tokenKey);
                         token.setValue(tokenStr);
@@ -99,7 +99,7 @@ public class VianderRepository {
 
             @Override
             public void onFailure(Call<LoginDto> call, Throwable t) {
-                Log.d("", "", t);
+                //Log.d("", "", t);
                 String message = join(application.getApplicationContext().getString(R.string.invalid_credentials), " ", t.getMessage());
                 Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
@@ -113,7 +113,7 @@ public class VianderRepository {
                 loggedUser = new MutableLiveData<>();
                 viandsMenu = new MutableLiveData<>();
                 token = new MutableLiveData<>();
-                Log.i("logout", response.body().toString());
+                //Log.i("logout", response.body().toString());
             }
 
             @Override
@@ -156,12 +156,12 @@ public class VianderRepository {
                     @Override
                     public void onResponse(Call<ProfileDto> call, Response<ProfileDto> response) {
                         getUser(token, username);
-                        Log.i("Perfil", "actualizado");
+                        //Log.i("Perfil", "actualizado");
                     }
 
                     @Override
                     public void onFailure(Call<ProfileDto> call, Throwable t) {
-                        Log.e("Perfil error: ", t.getMessage());
+                        //Log.e("Perfil error: ", t.getMessage());
                         String message = join(application.getApplicationContext().getString(R.string.error_profile_update), " ", t.getMessage());
                         Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
@@ -180,7 +180,7 @@ public class VianderRepository {
         apiService.getPosts(token, id).enqueue(new Callback<PostDto>() {
             @Override
             public void onResponse(Call<PostDto> call, Response<PostDto> response) {
-                Log.i("GET POST", response.body().toString());
+                //Log.i("GET POST", response.body().toString());
                 List<PostDto> postLst = new ArrayList<>();
                 postLst.add(response.body());
                 viandsMenu.setValue(postLst);
@@ -198,7 +198,7 @@ public class VianderRepository {
         apiService.getPosts(token).enqueue(new Callback<List<PostDto>>() {
             @Override
             public void onResponse(Call<List<PostDto>> call, Response<List<PostDto>> response) {
-                Log.i("GET ALL POSTS", response.body().toString());
+                //Log.i("GET ALL POSTS", response.body().toString());
                 allViands.setValue(response.body());
             }
 
@@ -232,7 +232,7 @@ public class VianderRepository {
                     @Override
                     public void onFailure(Call<PostRandomDto> call, Throwable t) {
                         String message = join(application.getApplicationContext().getString(R.string.error_get_random_post), " ", t.getMessage());
-                        Log.e("Error", message);
+                        //Log.e("Error", message);
                         Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -258,10 +258,10 @@ public class VianderRepository {
                 UserDto user = body.get(0);
                 loggedUser.setValue(user);
                 ProfileDto profile = user.getProfile();
-                Log.i("WeekDays", profile.getWeekDays());
+                //Log.i("WeekDays", profile.getWeekDays());
                 String[] weekDaysArray = profile.getWeekDays().split(",");
                 int weekDays = weekDaysArray.length;
-                Log.i("WeekDaysCount", ""+weekDays);
+                //Log.i("WeekDaysCount", ""+weekDays);
                 PostRandomRequestDto postRandomRequestDto = parseFilters(profile.getFilters());
                 apiService.getPostRandom(token, weekDays, postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
                     @Override
@@ -295,7 +295,7 @@ public class VianderRepository {
                     @Override
                     public void onFailure(Call<PostRandomDto> call, Throwable t) {
                         String message = join(application.getApplicationContext().getString(R.string.error_get_random_post), " ", t.getMessage());
-                        Log.e("Error", message);
+                        //Log.e("Error", message);
                         Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -372,13 +372,13 @@ public class VianderRepository {
         apiService.postViandCount(token, postViandCountDto).enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.i("UpdateCounts", application.getApplicationContext().getString(R.string.updated_viands_count));
+                //Log.i("UpdateCounts", application.getApplicationContext().getString(R.string.updated_viands_count));
             }
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
                 String message = join(application.getApplicationContext().getString(R.string.error_update_counts), " ", t.getMessage());
-                Log.e("UpdateCounts", message);
+                //Log.e("UpdateCounts", message);
             }
         });
     }
@@ -387,7 +387,7 @@ public class VianderRepository {
         apiService.getViandCount(token).enqueue(new Callback<ViandCountResultDto>() {
             @Override
             public void onResponse(Call<ViandCountResultDto> call, Response<ViandCountResultDto> response) {
-                Log.i("ViandCounts", "viand count response");
+                //Log.i("ViandCounts", "viand count response");
                 if(response.body() != null){
                     viandCounts.setValue(response.body().getResults());
                 }else{
@@ -399,7 +399,7 @@ public class VianderRepository {
             @Override
             public void onFailure(Call<ViandCountResultDto> call, Throwable t) {
                 String message = join(application.getApplicationContext().getString(R.string.error_get_post), " ", t.getMessage());
-                Log.e("ViandCounts", message);
+                //Log.e("ViandCounts", message);
                 Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
