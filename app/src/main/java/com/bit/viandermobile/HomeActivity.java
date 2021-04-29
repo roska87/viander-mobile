@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -170,6 +171,15 @@ public class HomeActivity extends AppCompatActivity {
                     });
                     linearLayout.addView(cardView);
                 }
+            }
+        });
+
+        ImageView about = findViewById(R.id.about);
+        about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialogFragment = new AboutDialogFragment();
+                dialogFragment.show(getSupportFragmentManager(), "AboutDialogFragment");
             }
         });
 

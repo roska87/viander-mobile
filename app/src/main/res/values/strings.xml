@@ -103,4 +103,7 @@
     <string name="createdby">Creado por</string>
     <string name="canelones_de_carne">Canelones de carne</string>
 
+    <string name="titulo_acerca_de">Acerca de</string>
+    <string name="msg_acerca_de">Viander 2021</string>
+
 </resources>
