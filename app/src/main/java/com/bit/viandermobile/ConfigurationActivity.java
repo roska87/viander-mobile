@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -51,6 +52,8 @@ import static com.bit.viandermobile.constants.Constants.USERNAME_KEY;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
+    public static final String WEEK_DAYS = "weekDays";
+    public static final String FILTERS = "filters";
     private static final int CHIP_LIMIT = 20;
 
     private SharedPreferences sharedPreferences;
@@ -66,7 +69,6 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
 
@@ -117,8 +119,13 @@ public class ConfigurationActivity extends AppCompatActivity {
                         weekDays.add(i);
                     }
                 }
-                vianderViewModel.updateProfile(token, username, containList, weekDays);
+                String filters = null;
+                if(containList != null && !containList.isEmpty()){
+                    filters = formatFilters(containList);
+                }
                 Intent intent = new Intent(ConfigurationActivity.this, HomeActivity.class);
+                intent.putExtra(WEEK_DAYS, StringUtils.join(weekDays, ","));
+                intent.putExtra(FILTERS, filters);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
@@ -137,6 +144,9 @@ public class ConfigurationActivity extends AppCompatActivity {
         vianderViewModel.getLoggedUser().observe(ConfigurationActivity.this, new Observer<UserDto>() {
             @Override
             public void onChanged(UserDto userDto) {
+                if(savedInstanceState != null){
+                    return;
+                }
                 String filterStr = userDto.getProfile().getFilters();
                 if(!StringUtils.isEmpty(filterStr)){
                     removeChips();
@@ -267,6 +277,14 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     }
 
+    private String formatFilters(List<Pair<Boolean, String>> filterList){
+        StringBuilder filters = new StringBuilder();
+        for(Pair<Boolean, String> pair : filterList){
+            filters.append(pair.first ? "" : "!").append(pair.second).append(",");
+        }
+        return filters.toString();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -281,22 +299,20 @@ public class ConfigurationActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // TODO guardar estados
+        savedInstanceState.putStringArrayList("tags", new ArrayList<>(getChipValues()));
 
-        //savedInstanceState.putBoolean("MyBoolean", true);
-        //savedInstanceState.putDouble("myDouble", 1.9);
-        //savedInstanceState.putInt("MyInt", 1);
-        //savedInstanceState.putString("MyString", "Welcome back to Android");
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
         // TODO restaurar estados
-        //boolean myBoolean = savedInstanceState.getBoolean("MyBoolean");
-        //double myDouble = savedInstanceState.getDouble("myDouble");
-        //int myInt = savedInstanceState.getInt("MyInt");
-        //String myString = savedInstanceState.getString("MyString");
+        List<String> tags = savedInstanceState.getStringArrayList("tags");
+        for(String tag : tags){
+            addNewChip(tag, chipGroup);
+        }
+
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void initializeCategories(List<Integer> positivePositions){

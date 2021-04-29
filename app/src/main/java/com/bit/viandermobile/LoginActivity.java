@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
 
                     vianderViewModel.login(email, password);
-                    vianderViewModel.getLoggedUser().observeForever(userDto -> {
+                    vianderViewModel.getLoggedUser().observe(LoginActivity.this, userDto -> {
                         editor.putString(TOKEN_KEY, vianderViewModel.getToken().getValue());
                         editor.putString(USERNAME_KEY, userDto.getUsername());
                         editor.apply();

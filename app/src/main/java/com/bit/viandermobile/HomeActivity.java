@@ -19,10 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +34,7 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bit.viandermobile.domain.PostDto;
+import com.bit.viandermobile.domain.UserDto;
 import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.factories.VianderFactory;
 import com.bit.viandermobile.models.SessionViewModel;
@@ -41,6 +44,8 @@ import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import static org.apache.commons.lang3.StringUtils.*;
 import static com.bit.viandermobile.constants.Constants.*;
 
@@ -48,6 +53,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -60,6 +67,16 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ViewPager2 viewPager2;
     private Handler sliderHandler = new Handler();
+    private String weekDays;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        vianderViewModel.refreshLoggedUser(token, email);
+        vianderViewModel.getLoggedUser().observe(HomeActivity.this, userDto -> {
+            weekDays = userDto.getProfile().getWeekDays();
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +90,14 @@ public class HomeActivity extends AppCompatActivity {
         username = sharedpreferences.getString(USERNAME_KEY, null);
         token = sharedpreferences.getString(TOKEN_KEY, null);
         vianderViewModel.getViandCounts(token);
+
+        Button menuBtn = findViewById(R.id.viandsButton);
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMenu();
+            }
+        });
 
         // initializing our textview and button.
         TextView welcomeTV = findViewById(R.id.welcome);
@@ -114,13 +139,9 @@ public class HomeActivity extends AppCompatActivity {
             public void onPageSelected (int position){
                 super.onPageSelected(position);
                 sliderHandler.removeCallbacks(sliderRunnable);
-                sliderHandler.postDelayed(sliderRunnable, 3000);
+                sliderHandler.postDelayed(sliderRunnable, 1000);
             }
         });
-
-        if(token != null){
-            //Log.i("Token -> ", token);
-        }
 
         vianderViewModel.getViandCounts().observe(this, new Observer<List<PostDto>>() {
             @Override
@@ -153,6 +174,33 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void getMenu(){
+        weekDays = vianderViewModel.getLoggedUser().getValue().getProfile().getWeekDays();
+        if(StringUtils.isEmpty(weekDays)){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(HomeActivity.this, android.R.style.Theme_DeviceDefault_Light));
+            builder.setTitle(getString(R.string.menu_recommendation));
+            builder.setMessage(getString(R.string.no_configuration_days));
+            builder.setPositiveButton(getString(R.string.configure), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(HomeActivity.this, ConfigurationActivity.class);
+                    startActivityForResult(i, LAUNCH_CONFIGURATION_ACTIVITY);
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        }else{
+            Intent i = new Intent(HomeActivity.this, ViandasActivity.class);
+            startActivity(i);
+        }
     }
 
     private void showDescription(String desc){
@@ -196,8 +244,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void clickViandas(View view){
-        Intent i = new Intent(HomeActivity.this, ViandasActivity.class);
-        startActivity(i);
+        getMenu();
     }
 
     public void clickConfig(View view){
@@ -210,7 +257,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void logout(Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, android.R.style.Theme_DeviceDefault_Light));
         builder.setTitle(getString(R.string.logout));
         builder.setMessage(getString(R.string.logout_question));
 
@@ -257,6 +304,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LAUNCH_CONFIGURATION_ACTIVITY) {
             if(resultCode == Activity.RESULT_OK){
+                String weekDays = data.getStringExtra(ConfigurationActivity.WEEK_DAYS);
+                String filters = data.getStringExtra(ConfigurationActivity.FILTERS);
+                vianderViewModel.updateProfile(token, username, filters, weekDays);
                 Snackbar.make(findViewById(R.id.activityHome), getString(R.string.configuration_updated), Snackbar.LENGTH_LONG).show();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -279,7 +329,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        sliderHandler.postDelayed(sliderRunnable, 3000);
+        sliderHandler.postDelayed(sliderRunnable, 1000);
     }
 
 

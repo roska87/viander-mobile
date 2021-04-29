@@ -5,8 +5,8 @@
     <string name="enter_your_username">Usuario</string>
     <string name="confirmation">Confirmación</string>
     <string name="configuration">Configuración</string>
-    <string name="viands_recommendation">Recomendación de Viandas"</string>
-    <string name="menu_recommendation">Obtener menú"</string>
+    <string name="viands_recommendation">Recomendación de Viandas</string>
+    <string name="menu_recommendation">Obtener menú</string>
     <string name="logout">Salir</string>
     <string name="logout_question">¿Seguro que desea cerrar sesión?</string>
     <string name="yes">SI</string>
@@ -64,6 +64,7 @@
     <string name="confirm">Confirmar</string>
     <string name="chip">Excluye un ingrediente</string>
     <string name="configuration_updated">Configuración actualizada</string>
+    <string name="no_configuration_days">Para obtener un menú, debe configurar los días requeridos.</string>
     <string name="chips_max_count">Ha alcanzado el máximo de elementos</string>
 
     <string name="error_login">Error en login:</string>
@@ -93,6 +94,7 @@
     <string name="content_description">Content description</string>
     <string name="description">Descripción</string>
     <string name="close">cerrar</string>
+    <string name="configure">configurar</string>
     <string name="ok">ok</string>
     <string name="cancel">cancelar</string>
     <string name="change_viand">Cambiar vianda</string>

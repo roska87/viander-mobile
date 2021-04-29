@@ -21,6 +21,9 @@ import com.bit.viandermobile.rest.RestApiInterface;
 import com.bit.viandermobile.utils.NumberUtil;
 import com.bit.viandermobile.utils.TokenUtil;
 import com.google.android.gms.common.util.CollectionUtils;
+
+import org.apache.commons.lang3.StringUtils;
+
 import static org.apache.commons.lang3.StringUtils.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -256,7 +259,7 @@ public class VianderRepository {
                     Toast.makeText(application.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                 }
                 UserDto user = body.get(0);
-                loggedUser.setValue(user);
+                //loggedUser.setValue(user);
                 ProfileDto profile = user.getProfile();
                 //Log.i("WeekDays", profile.getWeekDays());
                 String[] weekDaysArray = profile.getWeekDays().split(",");
@@ -408,12 +411,14 @@ public class VianderRepository {
     private PostRandomRequestDto parseFilters(String filters){
         List<String> contains = new ArrayList<>();
         List<String> notContains = new ArrayList<>();
-        String[] filtersArray = filters.split(",");
-        for(String filter : filtersArray){
-            if(filter.startsWith("!")){
-                notContains.add(filter.replace("!", ""));
-            }else{
-                contains.add(filter);
+        if(StringUtils.isNotEmpty(filters)){
+            String[] filtersArray = filters.split(",");
+            for(String filter : filtersArray){
+                if(filter.startsWith("!")){
+                    notContains.add(filter.replace("!", ""));
+                }else{
+                    contains.add(filter);
+                }
             }
         }
         String containsStr = join(contains, ",");

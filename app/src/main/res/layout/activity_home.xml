@@ -79,7 +79,6 @@
                     android:layout_marginTop="12dp"
                     android:layout_gravity="bottom"
                     android:gravity="center_vertical"
-                    android:onClick="clickViandas"
                     android:orientation="vertical"
                     android:text="@string/menu_recommendation"
                     app:backgroundTint="@color/common_background"

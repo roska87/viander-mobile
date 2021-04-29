@@ -104,6 +104,13 @@ public class VianderViewModel extends AndroidViewModel {
         vianderRepository.updateProfile(token, username, profileDto);
     }
 
+    public void updateProfile(String token, String username, String filters, String weekDays){
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setFilters(filters);
+        profileDto.setWeekDays(weekDays);
+        vianderRepository.updateProfile(token, username, profileDto);
+    }
+
     public void getPost(String token, int id){
         vianderRepository.getPost(token, id);
     }
