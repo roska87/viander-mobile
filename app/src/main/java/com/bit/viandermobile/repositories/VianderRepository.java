@@ -271,27 +271,26 @@ public class VianderRepository {
                     public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
                         Map<Integer, PostDto> map = new LinkedHashMap<>();
                         PostRandomDto randomDto = response.body();
-                        if(CollectionUtils.isEmpty(randomDto.getResults())){
-                            return;
-                        }
-                        if(randomDto.getResults() != null && randomDto.getResults().size() > 0){
-                            for(int i = 0; i < randomDto.getResults().size(); i++){
-                                map.put(Integer.parseInt(weekDaysArray[i]), randomDto.getResults().get(i));
+                        if(!CollectionUtils.isEmpty(randomDto.getResults())){
+                            if(randomDto.getResults() != null && randomDto.getResults().size() > 0){
+                                for(int i = 0; i < randomDto.getResults().size(); i++){
+                                    map.put(Integer.parseInt(weekDaysArray[i]), randomDto.getResults().get(i));
+                                }
                             }
-                        }
-                        // start - fill empty days
-                        int mapSize = map.size();
-                        if(mapSize < weekDays){
-                            Object[] entryArray = map.keySet().toArray();
-                            int difference = weekDays - mapSize;
-                            int count = 0;
-                            while(count < difference){
-                                int number = NumberUtil.getRandomNumber(0, mapSize-1);
-                                Integer key = (Integer) entryArray[number];
-                                PostDto value = map.get(key);
-                                String weekDay = weekDaysArray[mapSize + count];
-                                map.put(Integer.parseInt(weekDay), value);
-                                count++;
+                            // start - fill empty days
+                            int mapSize = map.size();
+                            if(mapSize < weekDays){
+                                Object[] entryArray = map.keySet().toArray();
+                                int difference = weekDays - mapSize;
+                                int count = 0;
+                                while(count < difference){
+                                    int number = NumberUtil.getRandomNumber(0, mapSize-1);
+                                    Integer key = (Integer) entryArray[number];
+                                    PostDto value = map.get(key);
+                                    String weekDay = weekDaysArray[mapSize + count];
+                                    map.put(Integer.parseInt(weekDay), value);
+                                    count++;
+                                }
                             }
                         }
                         // end - fill empty days

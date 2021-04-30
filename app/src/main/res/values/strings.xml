@@ -65,6 +65,7 @@
     <string name="chip">Excluye un ingrediente</string>
     <string name="configuration_updated">Configuración actualizada</string>
     <string name="no_configuration_days">Para obtener un menú, debe configurar los días requeridos.</string>
+    <string name="no_results">Lamentamos que no hubo resultados para sus preferencias. Puede intentar cambiar su configuración.</string>
     <string name="chips_max_count">Ha alcanzado el máximo de elementos</string>
 
     <string name="error_login">Error en login:</string>
@@ -94,6 +95,7 @@
     <string name="content_description">Content description</string>
     <string name="description">Descripción</string>
     <string name="close">cerrar</string>
+    <string name="back">volver</string>
     <string name="configure">configurar</string>
     <string name="ok">ok</string>
     <string name="cancel">cancelar</string>

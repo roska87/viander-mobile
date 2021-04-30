@@ -1,6 +1,5 @@
 package com.bit.viandermobile;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,10 +7,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -70,28 +69,33 @@ public class ViandasActivity extends AppCompatActivity {
         vianderViewModel.getMenu().observe(ViandasActivity.this, new Observer<Map<Integer, PostDto>>() {
             @Override
             public void onChanged(Map<Integer, PostDto> postDtoMap) {
-                List<ViandMenuViewModel> menuModelList = mapViand(postDtoMap);
-
-                vianderViewModel.getAllViands().observe(ViandasActivity.this, new Observer<List<PostDto>>() {
-                    @Override
-                    public void onChanged(List<PostDto> postDtos) {
-                        List<ViandMenuViewModel> menuList = menuModelList;
-                        if(viandPositions.hasChangePosition()){
-                            adapter.updateData(menuList, postDtos, viandPositions.getChangePosition());
-                            viandPositions.removeChangePosition();
-                        }else{
-                            if(savedInstanceState != null){
-                                menuList = savedInstanceState.getParcelableArrayList(MODEL_LIST_STATE_NAME);
-                                postDtos = savedInstanceState.getParcelableArrayList(POST_LIST_STATE_NAME);
+                if(postDtoMap == null || postDtoMap.isEmpty()){
+                    DialogFragment dialogFragment = new NoResultsDialogFragment();
+                    dialogFragment.setCancelable(false);
+                    dialogFragment.show(getSupportFragmentManager(), "NoResultsDialogFragment");
+                }else{
+                    List<ViandMenuViewModel> menuModelList = mapViand(postDtoMap);
+                    vianderViewModel.getAllViands().observe(ViandasActivity.this, new Observer<List<PostDto>>() {
+                        @Override
+                        public void onChanged(List<PostDto> postDtos) {
+                            List<ViandMenuViewModel> menuList = menuModelList;
+                            if(viandPositions.hasChangePosition()){
+                                adapter.updateData(menuList, postDtos, viandPositions.getChangePosition());
+                                viandPositions.removeChangePosition();
+                            }else{
+                                if(savedInstanceState != null){
+                                    menuList = savedInstanceState.getParcelableArrayList(MODEL_LIST_STATE_NAME);
+                                    postDtos = savedInstanceState.getParcelableArrayList(POST_LIST_STATE_NAME);
+                                }
+                                adapter.updateData(menuList, postDtos, null);
+                                recyclerView.setAdapter(adapter);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
+                                recyclerView.scheduleLayoutAnimation();
                             }
-                            adapter.updateData(menuList, postDtos, null);
-                            recyclerView.setAdapter(adapter);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
-                            recyclerView.scheduleLayoutAnimation();
+                            menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
                         }
-                        menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
-                    }
-                });
+                    });
+                }
             }
         });
 
