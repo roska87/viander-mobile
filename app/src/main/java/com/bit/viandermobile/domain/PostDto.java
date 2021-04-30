@@ -1,8 +1,11 @@
 package com.bit.viandermobile.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class PostDto {
+public class PostDto implements Parcelable {
 
     @SerializedName("id")
     private int id;
@@ -31,6 +34,53 @@ public class PostDto {
         this.price = price;
         this.author = author;
     }
+
+    protected PostDto(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        file = in.readString();
+        content = in.readString();
+        type = in.readString();
+        if (in.readByte() == 0) {
+            price = null;
+        } else {
+            price = in.readInt();
+        }
+        author = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(file);
+        dest.writeString(content);
+        dest.writeString(type);
+        if (price == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(price);
+        }
+        dest.writeString(author);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<PostDto> CREATOR = new Creator<PostDto>() {
+        @Override
+        public PostDto createFromParcel(Parcel in) {
+            return new PostDto(in);
+        }
+
+        @Override
+        public PostDto[] newArray(int size) {
+            return new PostDto[size];
+        }
+    };
 
     public int getId() {
         return id;

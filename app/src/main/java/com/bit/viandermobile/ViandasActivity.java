@@ -1,18 +1,14 @@
 package com.bit.viandermobile;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +36,9 @@ import static com.bit.viandermobile.constants.Constants.TOTAL_AMOUNT;
 import static com.bit.viandermobile.constants.Constants.USERNAME_KEY;
 
 public class ViandasActivity extends AppCompatActivity {
+
+    private static final String MODEL_LIST_STATE_NAME = "modelList";
+    private static final String POST_LIST_STATE_NAME = "postList";
 
     private SharedPreferences sharedPreferences;
     private String username, token;
@@ -71,15 +70,20 @@ public class ViandasActivity extends AppCompatActivity {
         vianderViewModel.getMenu().observe(ViandasActivity.this, new Observer<Map<Integer, PostDto>>() {
             @Override
             public void onChanged(Map<Integer, PostDto> postDtoMap) {
-                List<ViandMenuViewModel> menuList = mapViand(postDtoMap);
+                List<ViandMenuViewModel> menuModelList = mapViand(postDtoMap);
 
                 vianderViewModel.getAllViands().observe(ViandasActivity.this, new Observer<List<PostDto>>() {
                     @Override
                     public void onChanged(List<PostDto> postDtos) {
+                        List<ViandMenuViewModel> menuList = menuModelList;
                         if(viandPositions.hasChangePosition()){
                             adapter.updateData(menuList, postDtos, viandPositions.getChangePosition());
                             viandPositions.removeChangePosition();
                         }else{
+                            if(savedInstanceState != null){
+                                menuList = savedInstanceState.getParcelableArrayList(MODEL_LIST_STATE_NAME);
+                                postDtos = savedInstanceState.getParcelableArrayList(POST_LIST_STATE_NAME);
+                            }
                             adapter.updateData(menuList, postDtos, null);
                             recyclerView.setAdapter(adapter);
                             recyclerView.setLayoutManager(new LinearLayoutManager(ViandasActivity.this));
@@ -174,6 +178,23 @@ public class ViandasActivity extends AppCompatActivity {
                 return getString(R.string.sunday);
         }
         return "";
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        List<ViandMenuViewModel> modelList = adapter.getViandMenuViewModelList();
+        List<PostDto> postList = adapter.getAllViands();
+        savedInstanceState.putParcelableArrayList(MODEL_LIST_STATE_NAME, new ArrayList<>(modelList));
+        savedInstanceState.putParcelableArrayList(POST_LIST_STATE_NAME, new ArrayList<>(postList));
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        ArrayList<ViandMenuViewModel> modelList = savedInstanceState.getParcelableArrayList(MODEL_LIST_STATE_NAME);
+        List<PostDto> postList = savedInstanceState.getParcelableArrayList(POST_LIST_STATE_NAME);
+        adapter.updateData(modelList, postList, null);
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
 }

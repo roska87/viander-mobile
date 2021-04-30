@@ -117,9 +117,21 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
                 if(isChecked){
                     selectedDayNumbers.add((Integer) holder.dayNumber);
                     viandPositions.addChangePosition(position);
+                    for(ViandMenuViewModel model : viandMenuViewModelList){
+                        if(model.getDayNumber() == holder.dayNumber){
+                            model.setChecked(true);
+                            break;
+                        }
+                    }
                 }else{
                     selectedDayNumbers.remove((Integer) holder.dayNumber);
                     viandPositions.removeChangePosition(position);
+                    for(ViandMenuViewModel model : viandMenuViewModelList){
+                        if(model.getDayNumber() == holder.dayNumber){
+                            model.setChecked(false);
+                            break;
+                        }
+                    }
                 }
                 Collections.sort(selectedDayNumbers);
             }
@@ -298,4 +310,19 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         }
     }
 
+    public List<ViandMenuViewModel> getViandMenuViewModelList() {
+        return viandMenuViewModelList;
+    }
+
+    public void setViandMenuViewModelList(List<ViandMenuViewModel> viandMenuViewModelList) {
+        this.viandMenuViewModelList = viandMenuViewModelList;
+    }
+
+    public List<PostDto> getAllViands() {
+        return allViands;
+    }
+
+    public void setAllViands(List<PostDto> allViands) {
+        this.allViands = allViands;
+    }
 }

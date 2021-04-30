@@ -269,8 +269,11 @@ public class VianderRepository {
                 apiService.getPostRandom(token, weekDays, postRandomRequestDto).enqueue(new Callback<PostRandomDto>() {
                     @Override
                     public void onResponse(Call<PostRandomDto> call, Response<PostRandomDto> response) {
-                        PostRandomDto randomDto = response.body();
                         Map<Integer, PostDto> map = new LinkedHashMap<>();
+                        PostRandomDto randomDto = response.body();
+                        if(CollectionUtils.isEmpty(randomDto.getResults())){
+                            return;
+                        }
                         if(randomDto.getResults() != null && randomDto.getResults().size() > 0){
                             for(int i = 0; i < randomDto.getResults().size(); i++){
                                 map.put(Integer.parseInt(weekDaysArray[i]), randomDto.getResults().get(i));

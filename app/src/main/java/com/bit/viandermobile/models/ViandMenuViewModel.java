@@ -1,6 +1,9 @@
 package com.bit.viandermobile.models;
 
-public class ViandMenuViewModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ViandMenuViewModel implements Parcelable {
 
     private int id;
     private int dayNumber;
@@ -24,6 +27,46 @@ public class ViandMenuViewModel {
         this.price = price;
         this.checked = checked;
     }
+
+    protected ViandMenuViewModel(Parcel in) {
+        id = in.readInt();
+        dayNumber = in.readInt();
+        title = in.readString();
+        content = in.readString();
+        image = in.readString();
+        day = in.readString();
+        price = in.readInt();
+        checked = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(dayNumber);
+        dest.writeString(title);
+        dest.writeString(content);
+        dest.writeString(image);
+        dest.writeString(day);
+        dest.writeInt(price);
+        dest.writeByte((byte) (checked ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ViandMenuViewModel> CREATOR = new Creator<ViandMenuViewModel>() {
+        @Override
+        public ViandMenuViewModel createFromParcel(Parcel in) {
+            return new ViandMenuViewModel(in);
+        }
+
+        @Override
+        public ViandMenuViewModel[] newArray(int size) {
+            return new ViandMenuViewModel[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -88,5 +131,4 @@ public class ViandMenuViewModel {
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
-
 }
