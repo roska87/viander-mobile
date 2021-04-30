@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -54,6 +56,9 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     public static final String WEEK_DAYS = "weekDays";
     public static final String FILTERS = "filters";
+    public static final String TAGS_STATE_NAME = "tags";
+    public static final String CATEGORIES_STATE_NAME = "categories";
+    public static final String WEEK_DAYS_STATE_NAME = "weekDays";
     private static final int CHIP_LIMIT = 20;
 
     private SharedPreferences sharedPreferences;
@@ -84,11 +89,11 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         // Categories RecyclerView
         categoryLstView = (RecyclerView) findViewById(R.id.category_lst);
-        initializeCategories(null);
-
-        // Week RecyclerView
         weekLstView = (RecyclerView) findViewById(R.id.week_lst);
-        initializeWeek(null);
+        if(savedInstanceState == null){
+            initializeCategories(null);
+            initializeWeek(null);
+        }
 
         Button btnConfirm = findViewById(R.id.btnConfirm);
         Button btnReset = findViewById(R.id.btnReset);
@@ -298,21 +303,52 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // TODO guardar estados
-        savedInstanceState.putStringArrayList("tags", new ArrayList<>(getChipValues()));
-
+        // tags
+        savedInstanceState.putStringArrayList(TAGS_STATE_NAME, new ArrayList<>(getChipValues()));
+        // categories
+        boolean[] categories = new boolean[categoryLstView.getAdapter().getItemCount()];
+        for (int i = 0; i <categoryLstView.getAdapter().getItemCount() ; i++) {
+            CheckBox checkBox = categoryLstView.getChildAt(i).findViewById(R.id.cat_select);
+            categories[i] = checkBox.isChecked();
+        }
+        savedInstanceState.putBooleanArray(CATEGORIES_STATE_NAME, categories);
+        // week days weekLstView
+        boolean[] weekDays = new boolean[weekLstView.getAdapter().getItemCount()];
+        for (int i = 0; i <weekLstView.getAdapter().getItemCount() ; i++) {
+            CheckBox checkBox = weekLstView.getChildAt(i).findViewById(R.id.cat_select);
+            weekDays[i] = checkBox.isChecked();
+        }
+        savedInstanceState.putBooleanArray(WEEK_DAYS_STATE_NAME, weekDays);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // TODO restaurar estados
-        List<String> tags = savedInstanceState.getStringArrayList("tags");
+        // tags
+        List<String> tags = savedInstanceState.getStringArrayList(TAGS_STATE_NAME);
         for(String tag : tags){
             addNewChip(tag, chipGroup);
         }
+        // categories
+        boolean[] categoriesValues = savedInstanceState.getBooleanArray(CATEGORIES_STATE_NAME);
+        List<Integer> categoriesPositivePositions = getCheckedPositions(categoriesValues);
+        initializeCategories(categoriesPositivePositions);
+        // week days
+        boolean[] weekDaysValues = savedInstanceState.getBooleanArray(WEEK_DAYS_STATE_NAME);
+        List<Integer> weekDaysPositivePositions = getCheckedPositions(weekDaysValues);
+        initializeWeek(weekDaysPositivePositions);
 
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    private List<Integer> getCheckedPositions(boolean[] values){
+        List<Integer> positions = new LinkedList<>();
+        for(int i=0; i<values.length; i++){
+            if(values[i]){
+                positions.add(i);
+            }
+        }
+        return positions;
     }
 
     private void initializeCategories(List<Integer> positivePositions){
@@ -362,6 +398,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            et.clearFocus();
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -375,6 +412,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         if(chipGroup.getChildCount() - 1 >= chipLimit){
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            et.clearFocus();
             Snackbar.make(findViewById(R.id.recipient_input_ET), getString(R.string.chips_max_count), Snackbar.LENGTH_LONG).show();
             return true;
         }
