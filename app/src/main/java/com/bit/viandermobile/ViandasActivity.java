@@ -38,6 +38,10 @@ public class ViandasActivity extends AppCompatActivity {
 
     private static final String MODEL_LIST_STATE_NAME = "modelList";
     private static final String POST_LIST_STATE_NAME = "postList";
+    private static final String CHANGE_POSITIONS_STATE_NAME = "changePositions";
+    private static final String POSITIONS_STATE_NAME = "positions";
+    private static final String SELECTED_VIANDS_STATE_NAME = "selectedViands";
+    private static final String ROTATING_STATE_NAME = "rotating";
 
     private SharedPreferences sharedPreferences;
     private String username, token;
@@ -46,6 +50,7 @@ public class ViandasActivity extends AppCompatActivity {
     private ViandMenuViewAdapter adapter;
     private TextView menuPrice;
     private ViandPositions viandPositions;
+    private boolean rotating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +68,22 @@ public class ViandasActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         menuPrice = findViewById(R.id.menu_price_amount);
         recyclerView.scheduleLayoutAnimation();
-        viandPositions = ViandPositions.initialize();
+
+        if(savedInstanceState == null){
+            viandPositions = ViandPositions.initialize();
+        }else{
+            ArrayList<Integer> changePosition = savedInstanceState.getIntegerArrayList(CHANGE_POSITIONS_STATE_NAME);
+            ArrayList<Integer> positions = savedInstanceState.getIntegerArrayList(POSITIONS_STATE_NAME);
+            viandPositions = new ViandPositions(changePosition, positions);
+            rotating = savedInstanceState.getBoolean(ROTATING_STATE_NAME);
+        }
 
         adapter = new ViandMenuViewAdapter(ViandasActivity.this, new ArrayList<>(),
                 new ArrayList<>(), vianderViewModel, viandPositions);
+        if(savedInstanceState != null){
+            ArrayList<Integer> selectedViands = savedInstanceState.getIntegerArrayList(SELECTED_VIANDS_STATE_NAME);
+            adapter.setSelectedViands(selectedViands);
+        }
 
         vianderViewModel.getMenu().observe(ViandasActivity.this, new Observer<Map<Integer, PostDto>>() {
             @Override
@@ -81,8 +98,9 @@ public class ViandasActivity extends AppCompatActivity {
                         @Override
                         public void onChanged(List<PostDto> postDtos) {
                             List<ViandMenuViewModel> menuList = menuModelList;
-                            if(viandPositions.hasChangePosition()){
+                            if(viandPositions.hasChangePosition() && !rotating){
                                 adapter.updateData(menuList, postDtos, viandPositions.getChangePosition());
+                                adapter.cleanSelected();
                                 viandPositions.removeChangePosition();
                             }else{
                                 if(savedInstanceState != null){
@@ -95,6 +113,7 @@ public class ViandasActivity extends AppCompatActivity {
                                 recyclerView.scheduleLayoutAnimation();
                             }
                             menuPrice.setText(String.valueOf(getTotalAmount(menuList)));
+                            rotating = false;
                         }
                     });
                 }
@@ -192,6 +211,10 @@ public class ViandasActivity extends AppCompatActivity {
         List<PostDto> postList = adapter.getAllViands();
         savedInstanceState.putParcelableArrayList(MODEL_LIST_STATE_NAME, new ArrayList<>(modelList));
         savedInstanceState.putParcelableArrayList(POST_LIST_STATE_NAME, new ArrayList<>(postList));
+        savedInstanceState.putIntegerArrayList(CHANGE_POSITIONS_STATE_NAME, viandPositions.getChangePositionArrayList());
+        savedInstanceState.putIntegerArrayList(POSITIONS_STATE_NAME, viandPositions.getPositionsArrayList());
+        savedInstanceState.putIntegerArrayList(SELECTED_VIANDS_STATE_NAME, adapter.getSelectedViandsArrayList());
+        savedInstanceState.putBoolean(ROTATING_STATE_NAME, true);
         super.onSaveInstanceState(savedInstanceState);
     }
 

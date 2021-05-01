@@ -258,8 +258,21 @@ public class ViandMenuViewAdapter extends RecyclerView.Adapter<ViandMenuViewAdap
         builder.show();
     }
 
+    public ArrayList<Integer> getSelectedViandsArrayList(){
+        return new ArrayList<>(selectedDayNumbers);
+    }
+
     public List<Integer> getSelectedViands(){
         return selectedDayNumbers;
+    }
+
+    public void cleanSelected(){
+        selectedDayNumbers.clear();
+    }
+
+    public void setSelectedViands(ArrayList<Integer> selectedViands){
+        selectedDayNumbers.clear();
+        this.selectedDayNumbers.addAll(selectedViands);
     }
 
     public int getMenuPrice(){

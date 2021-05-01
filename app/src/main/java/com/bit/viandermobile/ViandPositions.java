@@ -15,8 +15,21 @@ public class ViandPositions {
         this.changePosition = new ArrayList<>();
     }
 
+    public ViandPositions(ArrayList<Integer> changePosition, ArrayList<Integer> positions){
+        this.changePosition = changePosition;
+        this.positions = positions;
+    }
+
     public static ViandPositions initialize(){
         return new ViandPositions();
+    }
+
+    public ArrayList<Integer> getChangePositionArrayList(){
+        return new ArrayList<>(changePosition);
+    }
+
+    public ArrayList<Integer> getPositionsArrayList(){
+        return new ArrayList<>(positions);
     }
 
     public List<Integer> getPositions() {
