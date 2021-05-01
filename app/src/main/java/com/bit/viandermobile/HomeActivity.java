@@ -60,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 public class HomeActivity extends AppCompatActivity {
 
     private static final int LAUNCH_CONFIGURATION_ACTIVITY = 1;
+    private static final String MOST_REQUESTED_STATE_NAME = "mostRequested";
 
     private VianderViewModel vianderViewModel;
     private SessionViewModel sessionViewModel;
@@ -69,6 +70,7 @@ public class HomeActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private Handler sliderHandler = new Handler();
     private String weekDays;
+    private List<PostDto> mostRequested;
 
     @Override
     protected void onStart() {
@@ -90,7 +92,12 @@ public class HomeActivity extends AppCompatActivity {
         email = sharedpreferences.getString(EMAIL_KEY, null);
         username = sharedpreferences.getString(USERNAME_KEY, null);
         token = sharedpreferences.getString(TOKEN_KEY, null);
-        vianderViewModel.getViandCounts(token);
+
+        if(savedInstanceState == null){
+            vianderViewModel.getViandCounts(token);
+        }else{
+            mostRequested = savedInstanceState.getParcelableArrayList(MOST_REQUESTED_STATE_NAME);
+        }
 
         Button menuBtn = findViewById(R.id.viandsButton);
         menuBtn.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +154,11 @@ public class HomeActivity extends AppCompatActivity {
         vianderViewModel.getViandCounts().observe(this, new Observer<List<PostDto>>() {
             @Override
             public void onChanged(List<PostDto> postDtos) {
+                if(!CollectionUtils.isEmpty(mostRequested)){
+                    postDtos = mostRequested;
+                }else{
+                    mostRequested = postDtos;
+                }
                 //Log.i("ViandCount", "get data");
                 LinearLayout linearLayout = findViewById(R.id.most_requested_layout);
                 LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
@@ -342,6 +354,10 @@ public class HomeActivity extends AppCompatActivity {
         sliderHandler.postDelayed(sliderRunnable, 3000);
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(MOST_REQUESTED_STATE_NAME, new ArrayList<>(mostRequested));
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
 }
