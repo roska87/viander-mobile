@@ -53,25 +53,26 @@ public class ConfirmationActivity extends AppCompatActivity {
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent1 = new Intent(ConfirmationActivity.this, HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(ConfirmationActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(ConfirmationActivity.this, getString(R.string.channel_id))
-                        .setSmallIcon(R.drawable.ic_baseline_fastfood_24)
-                        .setContentTitle(getText(R.string.request_state))
-                        .setContentText(getText(R.string.request_confirm))
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(getText(R.string.request_confirm)))
-                        .setPriority(NotificationCompat.FLAG_BUBBLE)
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ConfirmationActivity.this);
-                notificationManager.notify(RECEIVED_NOTIFICATION_ID, builder.build());
-            }
-        }, SPLASH_TIME_OUT);
-
+        if(savedInstanceState == null){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent1 = new Intent(ConfirmationActivity.this, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(ConfirmationActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(ConfirmationActivity.this, getString(R.string.channel_id))
+                            .setSmallIcon(R.drawable.ic_baseline_fastfood_24)
+                            .setContentTitle(getText(R.string.request_state))
+                            .setContentText(getText(R.string.request_confirm))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(getText(R.string.request_confirm)))
+                            .setPriority(NotificationCompat.FLAG_BUBBLE)
+                            .setContentIntent(pendingIntent)
+                            .setAutoCancel(true);
+                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ConfirmationActivity.this);
+                    notificationManager.notify(RECEIVED_NOTIFICATION_ID, builder.build());
+                }
+            }, SPLASH_TIME_OUT);
+        }
 
     }
 

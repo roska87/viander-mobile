@@ -56,8 +56,10 @@ public class ViandasActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         username = sharedPreferences.getString(USERNAME_KEY, null);
         token = sharedPreferences.getString(TOKEN_KEY, null);
-        vianderViewModel.getMenu(token, username);
-        vianderViewModel.getAllViands(token, username);
+        if(savedInstanceState == null){
+            vianderViewModel.getMenu(token, username);
+            vianderViewModel.getAllViands(token, username);
+        }
         recyclerView = findViewById(R.id.recyclerView);
         menuPrice = findViewById(R.id.menu_price_amount);
         recyclerView.scheduleLayoutAnimation();
@@ -195,9 +197,11 @@ public class ViandasActivity extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        /*
         ArrayList<ViandMenuViewModel> modelList = savedInstanceState.getParcelableArrayList(MODEL_LIST_STATE_NAME);
         List<PostDto> postList = savedInstanceState.getParcelableArrayList(POST_LIST_STATE_NAME);
         adapter.updateData(modelList, postList, null);
+         */
         super.onRestoreInstanceState(savedInstanceState);
     }
 
