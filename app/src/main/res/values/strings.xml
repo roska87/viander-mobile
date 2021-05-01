@@ -107,5 +107,6 @@
 
     <string name="titulo_acerca_de">Acerca de</string>
     <string name="msg_acerca_de">Viander 2021</string>
+    <string name="version">Versión</string>
 
 </resources>

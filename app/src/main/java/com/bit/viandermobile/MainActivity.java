@@ -9,15 +9,16 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.widget.TextView;
 
 import com.bit.viandermobile.entities.Session;
 import com.bit.viandermobile.factories.SessionFactory;
 import com.bit.viandermobile.models.SessionViewModel;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 import static  com.bit.viandermobile.constants.Constants.*;
 
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         sessionViewModel = new ViewModelProvider(this, new SessionFactory(getApplication())).get(SessionViewModel.class);
+
+        String versionName = BuildConfig.VERSION_NAME;
+        TextView versionTextView = findViewById(R.id.version);
+        versionTextView.setText(join(getString(R.string.version), " ", versionName));
 
         createNotificationChannel();
 
